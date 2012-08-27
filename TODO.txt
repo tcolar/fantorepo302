@@ -1,18 +1,20 @@
-User signup
-User login
-Lost password ?
-user authentication/permissions
-private repos
+3) User signup
+3) User login
+4) Lost password ?
+3) user authentication/permissions
+4) private repos
 
-depends/fetch count
+2) depends/fetch count
 
-Home page -> top depends / count etc ...
+3) Home page -> top depends / count etc ...
 
-Implement all Repo method (fanr server)
+2) Implement all Repo method (fanr server)
 
-TODO: require vcs.uri(or fantorepo.contact) , summary, license.name ?
+2) TODO: require vcs.uri(or fantorepo.contact) , summary, license.name ?
 
-pod search
+5) pod search
 
-pod project support
+5) pod project support
+
+4) provide a script/tool to rebuild the whole db from the pods in the repo (in case of db crash or new features)
 
