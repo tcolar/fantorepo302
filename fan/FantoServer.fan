@@ -174,7 +174,7 @@ const class FantoServer : DraftMod
       return
     }  
     out.h4.print("Pod Details (Latest version):").h4End.ul
-    out.li.print("Size: ").print(version.size).liEnd
+    out.li.print("Size: ").print(version.size.toInt.toLocale("B")).liEnd
     version.meta.each |val, key|
     {
         out.li
