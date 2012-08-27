@@ -1,0 +1,10 @@
+// Example config.props to copy into [fantom_home]/env/fantorepo/config.props
+
+repoRoot=/opt/fantorepo/
+
+listenPort=8100
+
+mongHost=localhost
+monPort=27017
+
+publicUri=http://mysuperrepo.com/

@@ -1,0 +1,18 @@
+User signup
+User login
+Lost password ?
+user authentication/permissions
+private repos
+
+depends/fetch count
+
+Home page -> top depends / count etc ...
+
+Implement all Repo method (fanr server)
+
+TODO: require vcs.uri(or fantorepo.contact) , summary, license.name ?
+
+pod search
+
+pod project support
+
