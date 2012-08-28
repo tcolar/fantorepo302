@@ -1,26 +1,17 @@
-3) User signup
-3) User login
-4) Lost password ?
-3) user authentication/permissions
-4) private repos
 
 2) depends/fetch count
-
-3) Home page -> top depends / count etc ...
-
 2) Implement all Repo method (fanr server)
-
-2) TODO: require version, vcs.uri(or fantorepo.contact) , summary, license.name ?
-
-5) pod search
-
-5) pod project support
-
-4) provide a script/tool to rebuild the whole db from the pods in the repo (in case of db crash or new features)
-
-4) Unit tests !
-
 2) write unit test for fanr issue (extend existing ones) ?
 
-Allow to delete a pod (only via web interface) ??? -> only if nothing depends on it ? -> dangerous
-Allow to replace a pod without changing the version ? -> dangerous too
+3) user authentication/permissions
+3) User signup
+3) User login
+3) Home page -> top depends / count etc ...
+
+4) Lost password ?
+4) private repos
+4) provide a script/tool to rebuild the whole db from the pods in the repo (in case of db crash or new features)
+4) Unit tests !
+
+5) pod search
+5) pod project support
