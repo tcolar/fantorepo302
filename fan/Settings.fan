@@ -42,4 +42,9 @@ const class Settings
     return "Settings{root: $repoRoot, port: $listenPort, 
             mongoHost: $mongoHost, mongoPort: $mongoPort}"
   }
+  
+  static const Str[] standardPods := ["build", "compiler","compilerDoc","compilerJava",
+    "compilerJs","concurrent","doc","dom","email","fandoc","fanr","fansh",
+    "flux","fwt","gfx","icons","inet","obix","sql","syntax","sys","util",
+    "web","webfwt","webmod","wisp","xml"] 
 }

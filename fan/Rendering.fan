@@ -7,7 +7,7 @@ using web
 
 **
 ** Rendering
-** Html rendeing helper
+** Html rendering helper
 ** TODO: Maybe use mustache instead
 **
 const class Rendering

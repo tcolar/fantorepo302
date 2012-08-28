@@ -13,21 +13,21 @@ using web
 ** 
 const class FantoServer : DraftMod
 {
-  static const Settings settings := Settings()
-  static const Mongo mongo := Mongo(settings.mongoHost, settings.mongoPort)
-  static const DB db := mongo.start.db("fantorepo")
-  static const WebRepoMod repoMod := WebRepoMod() {
+  const Settings settings := Settings()
+  const Mongo mongo := Mongo(settings.mongoHost, settings.mongoPort)
+  const DB db := mongo.start.db("fantorepo")
+  const WebRepoMod repoMod := WebRepoMod() {
     repo = FantoRepo(settings)
-    auth = FantoRepoAuth("test", "test")
+    auth = FantoRepoAuth()
   }
   
   ** Constructor.
   new make()
   {    
+    // TODO: check authentication here for get requests to /private ??
+    
     // Will service "standard" fanr REST requests at /fanr/
     subMods = ["fanr": repoMod]
-    
-    // TODO: submod for browsing ?
     
     // Rest of web services. Index pages, browsing etc ...
     pubDir = null
@@ -123,7 +123,7 @@ const class FantoServer : DraftMod
       out.li.a(req.modRel.plusSlash + `$version.name`).print(version.name).aEnd.liEnd
     }
     out.ulEnd
-    .divEnd //span6
+    .divEnd // end of span6
         
     // current version infos (PodVersion / pod meta)
     .div("class='span5'")
