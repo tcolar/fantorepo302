@@ -76,6 +76,7 @@ const class FantoRepo : Repo
 
   override PodSpec publish(File podFile)
   {
+    echo(">publish")
     throw(Err("test error"))
     PodVersion? podVer 
     
