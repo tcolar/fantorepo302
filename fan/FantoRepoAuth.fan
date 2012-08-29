@@ -8,7 +8,7 @@ using mongo
 
 **
 ** FantoRepoAuth
-** Authentication / permissions for repo
+** Authentication / permissions for the repo (via fanr command)
 **
 internal const class FantoRepoAuth : WebRepoAuth
 {
@@ -86,7 +86,7 @@ internal const class FantoRepoAuth : WebRepoAuth
   ** Throw descriptive errors if validation fails
   Void validateSpec(PodSpec p)
   {
-    if( ! checkStr(p.name) || Settings.standardPods.contains(p.name))
+    if( ! checkStr(p.name) || Utils.standardPods.contains(p.name))
       throw Err("Invalid pod name")
     if( ! checkStr(p.version.toStr))
       throw Err("A pod version is required ('version' build.fan)")

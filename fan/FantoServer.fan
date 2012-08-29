@@ -10,6 +10,7 @@ using web
 
 **
 ** Master Server mod
+** Route and serve the pages
 ** 
 const class FantoServer : DraftMod
 {
@@ -179,7 +180,17 @@ const class FantoServer : DraftMod
     {
         out.li
         if(key == "pod.depends")
-          out.b    
+        {
+          // highlight non standard deps  
+          tmp := "" 
+          val.split(';').each |dep| 
+          {
+            parts := dep.split(' ')
+            name := parts.size > 0 ? parts[0] : ""    
+            tmp += Utils.standardPods.contains(name) ? "$dep; " : "<b>$dep</b>; "
+          }
+          val = tmp  
+        }    
         out.print("${key}: ").print(val)
         if(key == "pod.depends")
           out.bEnd    

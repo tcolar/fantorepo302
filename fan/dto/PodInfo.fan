@@ -9,7 +9,7 @@ using mongo
 
 **
 ** PodInfo object
-** Top level pod infos
+** Top level pod infos (with individual version as PodVersion#)
 **
 const class PodInfo : MongoDoc
 {

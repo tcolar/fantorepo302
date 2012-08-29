@@ -1,17 +1,20 @@
 
 2) depends/fetch count
-2) Implement all Repo method (fanr server)
-2) write unit test for fanr issue (extend existing ones) ?
+2) Implement all Repo method (fanr server) - except project stuff
 
-3) user authentication/permissions
+3) user authentication/permissions (50%)
 3) User signup
 3) User login
 3) Home page -> top depends / count etc ...
+4) private repos support
+
+Release quietly
 
 4) Lost password ?
-4) private repos
-4) provide a script/tool to rebuild the whole db from the pods in the repo (in case of db crash or new features)
+4) provide a script/tool to rebuild the whole db from the folder of pods recursively (in case of db crash or new features)
 4) Unit tests !
 
 5) pod search
-5) pod project support
+5) pod "project" support
+
+Home / explanation page: explained how to publish and the meta requirements and so on
