@@ -2,19 +2,29 @@
 2) depends/fetch count
 2) Implement all Repo method (fanr server) - except project stuff
 
-3) user authentication/permissions (50%)
 3) User signup
 3) User login
-3) Home page -> top depends / count etc ...
+3) user authentication/permissions (50%)
 4) private repos support
+
+4) make a script/tool to rebuild the whole db from the folder of pods recursively (in case of db crash or new features)
+4) allow to delete private pod (web interface)? ... i guess so, so it can then be made public
+4) Home page -> top depends / count etc ...
+4) Home / explanation page: explained how to publish and the meta requirements and so on
 
 Release quietly
 
+4) pod search
+3) browse / search results ordering (ex: by name, by date)
 4) Lost password ?
-4) provide a script/tool to rebuild the whole db from the folder of pods recursively (in case of db crash or new features)
 4) Unit tests !
 
-5) pod search
-5) pod "project" support
 
-Home / explanation page: explained how to publish and the meta requirements and so on
+5) pod "project" support
+5) browse/search pagination
+
+"Official" release & make repo public on BB
+
+9) Meh: allow to overwrite a private pod (same version for easy development) ?? maybe 
+9) Meh: Or maybe have a special /staging area for that (private would not allow replace existing version but private would)
+

@@ -186,7 +186,8 @@ const class FantoServer : DraftMod
           val.split(';').each |dep| 
           {
             parts := dep.split(' ')
-            name := parts.size > 0 ? parts[0] : ""    
+            name := parts.size > 0 ? parts[0] : ""  
+            // TODO: Provide link to deps that we have in the repo ?
             tmp += Utils.standardPods.contains(name) ? "$dep; " : "<b>$dep</b>; "
           }
           val = tmp  
