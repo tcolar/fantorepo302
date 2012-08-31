@@ -19,12 +19,12 @@ class MongoUtils
   static Void atomicInc(DB db, Type mongoDocType, Field counterField, Str:Obj? filter, Int incBy := 1)
   {
     collectionName := mongoDocName(mongoDocType)
-    doc := doc(counterField.name, doc(Str<|$inc|>, 1))    
+    doc := doc(Str<|$inc|>, doc(counterField.name, incBy))    
     db.collection(collectionName).update(filter, doc, false, false, true)
   }
 
   ** Just syntax sugar for manually creating mongo docs 
-  static Str:Obj? doc(Str name, Obj val)
+  static Str:Obj? doc(Str name, Obj? val)
   {
     Str:Obj? obj := [:]
     obj[name] = val
@@ -87,10 +87,10 @@ class MongoUtils
         versions.eachr |PodVersion version -> Str?| // we use eachr to get newest first
         {
           if(cpt >= numVersions) return "done"
-          cpt++
           spec := version.asPodSpec
           if(part.includeVersion(spec) && part.includeMetas(spec))
           {
+            cpt++
             matches.add(spec)
           }
           return null             

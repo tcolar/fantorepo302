@@ -155,7 +155,7 @@ const class FantoServer : DraftMod
     
     .div("class='alert alert-success'").print("To install ").b.print("THIS VERSION ($version.name)")
     .bEnd.print(" of the pod, use:").br
-    .br.code.b.print("fanr install -r ${settings.publicUri}fanr/ $version.pod $version.name").bEnd.codeEnd
+    .br.code.b.print("fanr install -r ${settings.publicUri}fanr/ \"$version.pod $version.name\"").bEnd.codeEnd
     .br.br.print("Or download manually here: ")
     .a(req.modRel.plusSlash + `$fname`).print(fname).aEnd
     .divEnd.ul
