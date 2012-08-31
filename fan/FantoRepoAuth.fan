@@ -52,11 +52,27 @@ internal const class FantoRepoAuth : WebRepoAuth
 
   override Bool allowQuery(Obj? u, PodSpec? p) 
   { 
+    if(p != null)
+    {
+      pod := PodInfo.find(db, p.name)
+      if(pod == null)
+        return false
+      if(pod.isPrivate)
+        return pod.owner == username
+    }  
     return true
   }
   
   override Bool allowRead(Obj? u, PodSpec? p) 
-  { 
+  {
+    if(p != null)
+    {
+      pod := PodInfo.find(db, p.name)
+      if(pod == null)
+        return false
+      if(pod.isPrivate)
+        return pod.owner == username
+    }  
     return true
   }
   
@@ -104,7 +120,7 @@ internal const class FantoRepoAuth : WebRepoAuth
     str != null && str.size()> 1
   }
 
-  private const Str? username := "test"
-  private const Str userSalt := "test"
-  private const Str password := "test"
+  private const Str? username := "TODO"
+  private const Str userSalt := "TODO"
+  private const Str password := "TODO"
 }

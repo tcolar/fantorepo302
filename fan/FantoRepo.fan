@@ -6,6 +6,7 @@
 using concurrent
 using fanr
 using mongo
+using fanlink
 
 **
 ** FantoRepo implements a repository on the file system using
@@ -43,41 +44,44 @@ const class FantoRepo : Repo
 
   override PodSpec? find(Str name, Version? ver, Bool checked := true)
   {
-    echo(">find")
+    log.info("Find :  $name - $ver")
 
     info := PodInfo.find(db, name)
-    PodVersion? pod
-    if(info !=null)
-    {   
-      pod = PodVersion.find(db, name, ver ?: info.lastVersion)
+    if(info != null)
+    { 
+      // if no version specified then return latest  
+      pod := PodVersion.find(db, name, ver ?: info.lastVersion)
+      if(pod != null)
+        return pod.asPodSpec
     }
     
-    if(pod != null)
-    {
-      return pod.asPodSpec
-    }        
     if (checked) throw UnknownPodErr("$name-$ver")
       return null
   }
 
+  ** Numversion: how many versions max to return
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
-    echo(">query")
+    log.info("TODO: Query : $query")
     // TODO: search mongo
     return [,]
   }
 
   override InStream read(PodSpec spec)
   {
-    echo(">read")
+    log.info("Read : $spec")
+    version := PodVersion.find(db, spec.name, spec.version.toStr)
+
+    PodInfo.incFetches(db, version.pod) 
+    
+    file := File.os(version.filePath)
     // TODO: send the pod matching the spec
-    return "TODO".in
+    return file.in
   }
 
   override PodSpec publish(File podFile)
   {
-    echo(">publish")
-    throw(Err("test error"))
+    log.info("Publishing : $podFile")
     PodVersion? podVer 
     
     try
@@ -95,31 +99,29 @@ const class FantoRepo : Repo
       dest.parent.create
       podFile.moveTo(dest)
     
-      log.info("Published: $dest.osPath")
-      isNew := PodInfo.find(db, spec.name) == null
+      prevInfo := PodInfo.find(db, spec.name)
       info := PodInfo.makeNew(spec, dest, owner) 
  
       // Create the version
       podVer = PodVersion.makeNew(spec, dest, owner)
       podVer.insert(db)
     
+      log.info("Published: $spec.name - $spec.version.toStr")
+      
       // Update the pod info
-      if(isNew)
-      {
+      if(prevInfo == null)
+      { // new
         info.insert(db)  
       }
       else
-      {
+      { // update
         info.update(db)
-      }  
+      }        
     }catch(Err err) 
     {
       log.err("Publishing error: ", err)
     }
    
-    // todo: update the depends ? if not a new pod, compare new depends to old depends to update affected items)
-    echo("spec: "+podVer?.asPodSpec)
-    
     return podVer?.asPodSpec ?: Err("Publish failed.")
   }
   

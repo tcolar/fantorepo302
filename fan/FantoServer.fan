@@ -113,13 +113,13 @@ const class FantoServer : DraftMod
     .li.print("Last Update: ").print(DateTime(pod.lastModif).toLocale).liEnd
     .li.print("Current version: ").a(req.modRel.plusSlash + `$pod.lastVersion`).print(pod.lastVersion).aEnd.liEnd
     .li.print("Published by: ").print(pod.owner).liEnd
-    .li.print("# Dependant pods: ").print(pod.nbDependants).liEnd
-    .li.print("# Of fetches: ").print(pod.nbFetches).liEnd
+    //.li.print("# Dependant pods: ").print(pod.nbDependants).liEnd
+    .li.print("# Of downloads: ").print(pod.nbFetches).liEnd
     .ulEnd
 
     // List and link to all versions
     out.h4.print("All versions: ").h4End.ul
-    PodVersion.findAll(db, pod.name).each |version|
+    PodVersion.findAll(db, pod.name).eachr |version|
     {
       out.li.a(req.modRel.plusSlash + `$version.name`).print(version.name).aEnd.liEnd
     }
@@ -203,12 +203,15 @@ const class FantoServer : DraftMod
   ** "Manual" download of a pod
   Void downloadPod(Str:Str args)
   {
+    // TODO: deal with private pods, only allow if logged in and owner
     version := PodVersion.find(db, args["pod"], args["version"])
     if(version == null || version.filePath.toUri.name != args["file"])
     {
       notFound
       return
-    }  
+    } 
+    
+    PodInfo.incFetches(db, version.pod) 
     // serve the file
     FileWeblet(File.os(version.filePath)).onService
   } 

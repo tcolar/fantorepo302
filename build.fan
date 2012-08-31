@@ -20,6 +20,6 @@ class Build : BuildPod
                 "mongo 1.0+", "fanlink 0.1+", "web 1.0+"]
     srcDirs = [`fan/`, `fan/dto/`]
     resDirs = [`res/css/`]
-    version = Version("1.0.0")
+    version = Version("1.0.3")
   }
 }

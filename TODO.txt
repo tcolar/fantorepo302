@@ -1,11 +1,10 @@
 
-2) depends/fetch count
-2) Implement all Repo method (fanr server) - except project stuff
-
 3) User signup
 3) User login
-3) user authentication/permissions (50%)
+3) user authentication/permissions (60%)
+3) Support for repo "query" ... if needed / possible
 4) private repos support
+4) create indexes for the collections
 
 4) make a script/tool to rebuild the whole db from the folder of pods recursively (in case of db crash or new features)
 4) allow to delete private pod (web interface)? ... i guess so, so it can then be made public
@@ -22,7 +21,7 @@ Release quietly
 
 5) pod "project" support
 5) browse/search pagination
-
+5) depends count ... might need a background job for that ... later
 "Official" release & make repo public on BB
 
 9) Meh: allow to overwrite a private pod (same version for easy development) ?? maybe 

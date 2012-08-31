@@ -26,11 +26,12 @@ const class PodInfo : MongoDoc
   
   const Bool? isPrivate := false
  
-  const Int? nbFetches := 0// how many times it was pulled
-  const Int? nbDependants := 0// how many pods depand on this one
-  
   const Str? vcsUri
   const Str? summary
+
+  // Note: we update those 2 via the inc* & dec* static atomic methods and never "manually"
+  const Int? nbFetches := 0// how many times it was pulled
+  const Int? nbDependants := 0// how many pods depand on this one ... not used yet
  
   new make(|This| f) {f(this)}
 
@@ -88,4 +89,19 @@ const class PodInfo : MongoDoc
   {
     Operations.insert(db, this)
   }
+  
+  static Void incFetches(DB db, Str podName)
+  {
+    MongoUtils.atomicInc(db, PodInfo#, PodInfo#nbFetches, [PodInfo#name.name : podName])
+  }  
+
+  static Void incDependants(DB db, Str podName)
+  {
+    MongoUtils.atomicInc(db, PodInfo#, PodInfo#nbDependants, [PodInfo#name.name : podName])
+  }
+  
+  static Void decDependants(DB db, Str podName)
+  {
+    MongoUtils.atomicInc(db, PodInfo#, PodInfo#nbDependants, [PodInfo#name.name : podName], -1)
+  }  
 }
