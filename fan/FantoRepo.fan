@@ -46,7 +46,7 @@ const class FantoRepo : Repo
   {
     log.info("Find :  $name - $ver")
 
-    info := PodInfo.find(db, name)
+    info := PodInfo.findOne(db, name)
     if(info != null)
     { 
       // if no version specified then return latest  
@@ -62,9 +62,11 @@ const class FantoRepo : Repo
   ** Numversion: how many versions max to return
   override PodSpec[] query(Str query, Int numVersions := 1)
   {
-    log.info("TODO: Query : $query")
-    // TODO: search mongo
-    return [,]
+    log.info("Query : $query")
+    q := Query.fromStr(query)
+    return MongoUtils.runFanrQuery(db, q, numVersions)
+    // note that WebRepoMod with filter this further with auth.allowQuery
+    // that means numVersions might not be respected (only if only some versions allowed -> unlikely)
   }
 
   override InStream read(PodSpec spec)
@@ -99,7 +101,7 @@ const class FantoRepo : Repo
       dest.parent.create
       podFile.moveTo(dest)
     
-      prevInfo := PodInfo.find(db, spec.name)
+      prevInfo := PodInfo.findOne(db, spec.name)
       info := PodInfo.makeNew(spec, dest, owner) 
  
       // Create the version

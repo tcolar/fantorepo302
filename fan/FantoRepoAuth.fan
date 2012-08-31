@@ -54,7 +54,7 @@ internal const class FantoRepoAuth : WebRepoAuth
   { 
     if(p != null)
     {
-      pod := PodInfo.find(db, p.name)
+      pod := PodInfo.findOne(db, p.name)
       if(pod == null)
         return false
       if(pod.isPrivate)
@@ -67,7 +67,7 @@ internal const class FantoRepoAuth : WebRepoAuth
   {
     if(p != null)
     {
-      pod := PodInfo.find(db, p.name)
+      pod := PodInfo.findOne(db, p.name)
       if(pod == null)
         return false
       if(pod.isPrivate)
@@ -87,7 +87,7 @@ internal const class FantoRepoAuth : WebRepoAuth
       // wil throw a descriptive Err if not valid  
       validateSpec(p)
  
-      pod := PodInfo.find(db, p.name)
+      pod := PodInfo.findOne(db, p.name)
       if(pod != null && pod.owner != username)
         throw Err("There is already a pod named $p.name in the repository by a different owner. Note that it might not show if it's private)")  
       version := PodVersion.find(db, p.name, p.version.toStr)

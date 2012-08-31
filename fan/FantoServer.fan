@@ -85,7 +85,7 @@ const class FantoServer : DraftMod
   ** Page about a specific pod
   Void podInfo(Str:Str args)
   {
-    pod := PodInfo.find(db, args["pod"])
+    pod := PodInfo.findOne(db, args["pod"])
     if(pod == null)
     {
       notFound

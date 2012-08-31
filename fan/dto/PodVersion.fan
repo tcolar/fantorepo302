@@ -15,8 +15,11 @@ const class PodVersion : MongoDoc
 {
   override const ObjectID? _id
   
-  ** The pod name tis version is of
+  ** The pod name this version is of
   const Str pod
+  ** same but all lower case, to search against 
+  const Str? podLower
+  
   ** Name of this version. ie: 1.0.0
   const Str? name
   
@@ -29,6 +32,7 @@ const class PodVersion : MongoDoc
   new makeNew(PodSpec spec, File newFile, Str owner)
   {
     this.pod = spec.name
+    this.podLower = spec.name.lower
     this.name = spec.version.toStr  
     this.meta = spec.meta  
     this.filePath = newFile.osPath              
@@ -39,13 +43,14 @@ const class PodVersion : MongoDoc
   static PodVersion? find(DB db, Str podName, Str podVersion)
   {
     filterObj := PodVersion {
-      pod = podName
       name = podVersion
+      podLower = podName.lower
+      pod = podName
       meta = [:]
     }
     findFilter := FindFilter {
       filter = filterObj
-      interestingFields = [PodVersion#pod, PodVersion#name]
+      interestingFields = [PodVersion#podLower, PodVersion#name]
     }
     results := Operations.find(db, findFilter)
     return results.isEmpty ? null : results[0]
@@ -55,12 +60,13 @@ const class PodVersion : MongoDoc
   static PodVersion[] findAll(DB db, Str podName)
   {
     filterObj := PodVersion {
+      podLower = podName.lower
       pod = podName
       meta = [:]
     }
     findFilter := FindFilter {
       filter = filterObj
-      interestingFields = [PodVersion#pod]
+      interestingFields = [PodVersion#podLower]
     }
     return Operations.find(db, findFilter)
   }

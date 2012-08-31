@@ -16,6 +16,8 @@ const class PodInfo : MongoDoc
   override const ObjectID? _id
   
   const Str name
+  ** lower case name for searching
+  const Str nameLower
   
   const Str? dirPath // dir of this pod
   
@@ -38,6 +40,7 @@ const class PodInfo : MongoDoc
   new makeNew(PodSpec spec, File newFile, Str owner)
   {
       this.name = spec.name
+      this.nameLower = spec.name.lower  
       this.owner = owner
       this.dirPath = newFile.parent.parent.osPath
               
@@ -49,18 +52,24 @@ const class PodInfo : MongoDoc
       this.vcsUri = spec.meta["vcs.uri"]?.toStr 
       this.summary = spec.summary            
   }
+
+  static PodInfo? findOne(DB db, Str podName)
+  {
+    pods := find(db, podName)
+    return pods.isEmpty ? null : pods[0]
+  }
   
-  static PodInfo? find(DB db, Str podName)
+  static PodInfo[] find(DB db, Str podName)
   {
     filterObj := PodInfo {
-      name = podName
+      nameLower = podName.lower
+      name = ""
     }
     findFilter := FindFilter {
       filter = filterObj
-      interestingFields = [PodInfo#name]
+      interestingFields = [PodInfo#nameLower]
     }
-    results := Operations.find(db, findFilter)
-    return results.isEmpty ? null : results[0]
+    return Operations.find(db, findFilter)
   }
   
   static PodInfo[] list(DB db)
@@ -72,6 +81,7 @@ const class PodInfo : MongoDoc
   {
     filterObj := PodInfo {
       it.name = this.name
+      it.nameLower = this.nameLower
       it.lastModif = DateTime.now.toStr
       it.lastVersion = this.lastVersion
       it.isPrivate = this.isPrivate
@@ -80,7 +90,7 @@ const class PodInfo : MongoDoc
     }
     findFilter := FindFilter {
       filter = filterObj
-      interestingFields = [PodInfo#name]
+      interestingFields = [PodInfo#nameLower]
     }
     Operations.update(db, findFilter, this)
   }
