@@ -51,7 +51,7 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    tpl.renderPage(res.out, Templating.notFound, "Pod repo home")
+    tpl.renderPage(res.out, Templating.home, "Pod repo home")
   }
 
   ** Page listing all the pods

@@ -3,25 +3,20 @@
 3) User login/logout
 3) user authentication/permissions (60%)
 4) private repos support
-4) create indexes for the collections
 
 4) allow to delete private pod (web interface)? ... i guess so, so it can then be made public
 4) Home page -> top downloads -> # of pods in repo (&versions ? )
 4) Home / explanation page: explained how to publish and the meta requirements and so on
-explain install a pod, install a project, publish, private vs publish, delte private to make public etc ...
-3) browse / search results ordering (ex: by name, by date)
+explain install a pod, install a project, publish, private vs publish, delete private to make public etc ...
 
 Release quietly
 
+4) create indexes for the collections
 4) Lost password ?
 4) Unit tests !
 
-
-5) pod "project" support
-5) browse/search pagination
+5) browse/search sorting & pagination
 5) depends count ... might need a background job for that ... later
-"Official" release & make repo public on BB
 
-9) Meh: allow to overwrite a private pod (same version for easy development) ?? maybe 
-9) Meh: Or maybe have a special /staging area for that (private would not allow replace existing version but private would)
+"Official" release & make repo public on BB
 

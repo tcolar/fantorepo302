@@ -14,6 +14,7 @@ const class Templating
   // read templates into memory
   static const Str top := read(`/res/tpl/top.html`) 
   static const Str bottom := read(`/res/tpl/bottom.html`) 
+  static const Str home := read(`/res/tpl/home.html`) 
   static const Str notFound := read(`/res/tpl/404.html`) 
   static const Str podList := read(`/res/tpl/podlist.html`) 
   static const Str pod := read(`/res/tpl/pod.html`) 
