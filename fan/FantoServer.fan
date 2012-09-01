@@ -37,6 +37,7 @@ const class FantoServer : DraftMod
     router = Router {
       routes = [
         Route("/", "GET", #index),
+        Route("/search", "POST", #search), 
         Route("/browse", "GET", #listPods), 
         Route("/browse/{pod}", "GET", #podInfo),
         Route("/browse/{pod}/{version}", "GET", #versionInfo),
@@ -58,7 +59,10 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    tpl.renderPage(res.out, Templating.podList, "Pod listing", ["pods" : PodInfo.list(db)])    
+    // sorted by name -> keep sorted by last update instead ??
+    // TODO: do frontend srting later (jquery ? )
+    pods := PodInfo.list(db).dup.sort |a, b| {return a.nameLower.compare(b.nameLower)}
+    tpl.renderPage(res.out, Templating.podList, "Pod listing", ["pods" : pods])    
   }
   
   ** Page about a specific pod
@@ -77,7 +81,6 @@ const class FantoServer : DraftMod
     
     version := PodVersion.find(db, pod.name, pod.lastVersion) // latest
     versions := PodVersion.findAll(db, pod.name).dup.reverse // last modified first
-    echo("versions: $versions")
     
     data["pod"] = pod
     data["version"] = version
@@ -126,5 +129,24 @@ const class FantoServer : DraftMod
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 404
     tpl.renderPage(res.out, Templating.notFound, "Page not found")
+  }
+  
+  ** Run a search on the pods (name & summary)
+  Void search()
+  {
+    res.headers["Content-Type"] = "text/html"
+    res.statusCode = 200
+    form := req.form
+    query := form["query"]
+    
+    pods := PodInfo.searchPods(db, query)
+    
+    // filter out according to permissions    
+    // TODO : specs = specs.findAll |pod| { repoMod.auth.allowQuery(user, pod) }
+    Str:Obj? data := [:] 
+    data["pods"] = pods
+    data["query"] = query
+    
+    tpl.renderPage(res.out, Templating.results, "Search results", data)  
   }
 }

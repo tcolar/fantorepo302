@@ -2,7 +2,7 @@
     {{#pod}}
     <h1>Pod info for : {{name}}</h1>
     <div class='alert alert-success'>
-        To install the latest version (<a href='./{{name}}/{{lastVersion}}'>{{lastVersion}}</a>) of this pod, use:<br /><br />
+        To install the latest version (<a href='/browse/{{name}}/{{lastVersion}}'>{{lastVersion}}</a>) of this pod, use:<br /><br />
         <code><b>fanr install -r {{publicUri}}fanr/ {{name}}</b></code><br /><br />
         Or download manually by browsing to a specific version.</div>
     {{/pod}}
@@ -14,7 +14,7 @@
             <li><b>Summary: </b>{{summary}}</li>
             <li><b>Source Control Repo: <a href='{{vcsUri}}'>{{vcsUri}}</a></b></li>
             <li>Last Update: {{#formatTimestamp}}lastModif{{/formatTimestamp}}</li>
-            <li>Current version: <a href='./{{name}}/{{pod.lastVersion}}'>{{lastVersion}}</a></li>
+            <li>Current version: <a href='/browse/{{name}}/{{pod.lastVersion}}'>{{lastVersion}}</a></li>
             <li>Published by: {{owner}}</li>
             <li># Of downloads: {{nbFetches}}</li>
         </ul>
@@ -22,7 +22,7 @@
         <h4>All versions: </h4>
         <ul>
         {{#versions}}    
-            <li><a href='./{{pod}}/{{name}}'>{{name}}</a></li>
+            <li><a href='/browse/{{pod}}/{{name}}'>{{name}}</a></li>
         {{/versions}}
         </ul>
     </div>

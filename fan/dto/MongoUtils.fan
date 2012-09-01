@@ -8,6 +8,7 @@ using fanr
 
 **
 ** MongoUtils
+** Addons and utility methods for dealing with mongo - stuff that FanLink doesn't do
 **
 class MongoUtils
 {
@@ -34,6 +35,23 @@ class MongoUtils
   ** Using same naming convention as fanlink
   static Str mongoDocName(Type type) {
     return type.pod.name + "_" + type.name
+  }
+  
+  ** Search pod names and summary (can use patterns)
+  ** Because we bypass fanlink we get a plain list as the result
+  static List searchPods(DB db, Str query)
+  {
+    collectionName := mongoDocName(PodInfo#)
+    doc := doc(Str<|$or|>, 
+      [
+        doc("nameLower", doc(Str<|$regex|>, Regex.glob(query))),
+        doc("summary", doc(Str<|$regex|>, Regex.glob(query)))
+      ]);    
+    cursor := db.collection(collectionName).find(doc)  
+    [Str:Str][] results := cursor.toList
+    // alpha order
+    results.sort |a, b| {return a["nameLower"].compare(b["nameLower"])}  
+    return results
   }
   
   ** Take a standard fan query and build a mongo query object from it

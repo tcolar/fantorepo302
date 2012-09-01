@@ -77,6 +77,14 @@ const class PodInfo : MongoDoc
     return Operations.findAll(db, PodInfo#)
   }
   
+  ** Search pod names and summary (can use patterns)
+  ** Because we bypass fanlink we get a plain list as the result (not deserialized bcak into PodInfo)
+  static List searchPods(DB db, Str query)
+  {
+    return MongoUtils.searchPods(db, query)
+  }
+
+  
   Void update(DB db)
   {
     filterObj := PodInfo {
