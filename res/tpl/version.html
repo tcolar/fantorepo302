@@ -1,0 +1,17 @@
+<div class='row-fluid'>
+    {{#version}}
+    <h1>Details for <a href='/browse/{{pod}}'>{{pod}}</a> at version {{name}}</h1>
+    <div class='alert alert-success'>
+        To install <b>THIS VERSION ({{name}})</b> of the pod, use:<br /><br />
+        <code><b>fanr install -r {{publicUri}}fanr/ "{{pod}} {{name}}"</b></code><br /><br />
+        Or download manually here: <a href='../{{pod}}/{{name}}/{{pod}}.pod'>{{pod}}.pod</a>
+    </div>
+    <h4>Pod Details (Latest version):</h4>
+    <ul>
+        <li>Size: {{#formatSize}}size{{/formatSize}}</li>
+        {{#showMeta}}
+        meta
+        {{/showMeta}}
+    </ul>
+    {{/version}}
+</div>

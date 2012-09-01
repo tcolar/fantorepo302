@@ -15,6 +15,7 @@ using web
 const class FantoServer : DraftMod
 {
   const Settings settings := Settings()
+  const Templating tpl := Templating(settings)
   const Mongo mongo := Mongo(settings.mongoHost, settings.mongoPort)
   const DB db := mongo.start.db("fantorepo")
   const WebRepoMod repoMod := WebRepoMod() {
@@ -49,12 +50,7 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    out := res.out
-    Rendering.top(out, "Pod listing")
-    out.div("class='span12'")
-    .print("TBD")
-    .divEnd
-    Rendering.bottom(out)
+    tpl.renderPage(res.out, Templating.notFound, "Pod repo home")
   }
 
   ** Page listing all the pods
@@ -62,24 +58,7 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    out := res.out
-    Rendering.top(out, "Pod listing")
-    out.h1.print("Pod listing").h1End
-    out.table("class='table table-striped'").tr.th.print("Name").thEnd.th.print("Latest Version")
-    .thEnd.th.print("Last Update").thEnd.th.print("Summary").thEnd.trEnd
-    PodInfo.list(db).each |info|
-    {
-      summary := info.summary.size > 80 ? info.summary[0..79] + "..." : info.summary
-      out.tr
-      .td.a(req.modRel.plusSlash + `$info.name`).print(info.name).aEnd.tdEnd
-      .td.a(req.modRel.plusSlash + `$info.name/$info.lastVersion`).print(info.lastVersion).aEnd.tdEnd
-      .td.print(DateTime(info.lastModif).toLocale).tdEnd
-      .td.print(summary).tdEnd
-      .trEnd
-    }
-    out.tableEnd
-    // TODO: private pods
-    Rendering.bottom(out)
+    tpl.renderPage(res.out, Templating.podList, "Pod listing", ["pods" : PodInfo.list(db)])    
   }
   
   ** Page about a specific pod
@@ -94,44 +73,17 @@ const class FantoServer : DraftMod
     // Summary from PodInfo
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    out := res.out
-    Rendering.top(out, "Pod info for : $pod.name")
+    Str:Obj? data := [:] 
     
-    out.h1.print("Pod info for : $pod.name").h1End
-    .div("class='alert alert-success'").print("To install the latest version (")
-    .a(req.modRel.plusSlash + `$pod.lastVersion`).print(pod.lastVersion).aEnd
-    .print(") of this pod, use:").br
-    .br.code.b.print("fanr install -r ${settings.publicUri}fanr/ $pod.name").bEnd.codeEnd
-    .br.br.print("Or download manually by browsing to a specific version.")
-    .divEnd
+    version := PodVersion.find(db, pod.name, pod.lastVersion) // latest
+    versions := PodVersion.findAll(db, pod.name).dup.reverse // last modified first
+    echo("versions: $versions")
     
-    .div("class='span6'")
-    .h4.print("Pod Summary: ").h4End.ul
-    .li.b.print("Name: ").bEnd.print(pod.name).liEnd
-    .li.b.print("Summary: ").bEnd.print(pod.summary).liEnd
-    .li.b.print("Source Control Repo: ").a(pod.vcsUri?.toUri ?: `#`).print(pod.vcsUri).aEnd.bEnd.liEnd
-    .li.print("Last Update: ").print(DateTime(pod.lastModif).toLocale).liEnd
-    .li.print("Current version: ").a(req.modRel.plusSlash + `$pod.lastVersion`).print(pod.lastVersion).aEnd.liEnd
-    .li.print("Published by: ").print(pod.owner).liEnd
-    //.li.print("# Dependant pods: ").print(pod.nbDependants).liEnd
-    .li.print("# Of downloads: ").print(pod.nbFetches).liEnd
-    .ulEnd
-
-    // List and link to all versions
-    out.h4.print("All versions: ").h4End.ul
-    PodVersion.findAll(db, pod.name).eachr |version|
-    {
-      out.li.a(req.modRel.plusSlash + `$version.name`).print(version.name).aEnd.liEnd
-    }
-    out.ulEnd
-    .divEnd // end of span6
-        
-    // current version infos (PodVersion / pod meta)
-    .div("class='span5'")
-    versionDetails(out, pod.name, pod.lastVersion)
-    out.divEnd
-        
-    Rendering.bottom(out)
+    data["pod"] = pod
+    data["version"] = version
+    data["versions"] = versions
+    
+    tpl.renderPage(res.out, Templating.pod, "Pod info for : $pod.name", data)  
   } 
   
   ** Page about a specific version of a pod
@@ -143,62 +95,14 @@ const class FantoServer : DraftMod
       notFound
       return
     }  
-    fname := version.filePath.toUri.name
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    out := res.out
-    Rendering.top(out, "Details of $version.pod - $version.name")
-    out.h1
-    .print("Details for ").a(req.modRel.plusSlash+`../`).print(version.pod).aEnd
-    .print(" at version $version.name")
-    .h1End
+    Str:Obj? data := [:] 
     
-    .div("class='alert alert-success'").print("To install ").b.print("THIS VERSION ($version.name)")
-    .bEnd.print(" of the pod, use:").br
-    .br.code.b.print("fanr install -r ${settings.publicUri}fanr/ \"$version.pod $version.name\"").bEnd.codeEnd
-    .br.br.print("Or download manually here: ")
-    .a(req.modRel.plusSlash + `$fname`).print(fname).aEnd
-    .divEnd.ul
+    data["version"] = version
     
-    versionDetails(out, version.pod, version.name)
-    
-    Rendering.bottom(out)
+    tpl.renderPage(res.out, Templating.version, "Version details for : $version.pod - $version.name", data)  
   } 
-  
-  ** Part about a version details
-  Void versionDetails(WebOutStream out, Str podName, Str podVersion)
-  {
-    version := PodVersion.find(db, podName, podVersion)
-    if(version == null) 
-    {
-      out.print("Version data missing for $podName - $podVersion").br
-      return
-    }  
-    out.h4.print("Pod Details (Latest version):").h4End.ul
-    out.li.print("Size: ").print(version.size.toInt.toLocale("B")).liEnd
-    version.meta.each |val, key|
-    {
-        out.li
-        if(key == "pod.depends")
-        {
-          // highlight non standard deps  
-          tmp := "" 
-          val.split(';').each |dep| 
-          {
-            parts := dep.split(' ')
-            name := parts.size > 0 ? parts[0] : ""  
-            // TODO: Provide link to deps that we have in the repo ?
-            tmp += Utils.standardPods.contains(name) ? "$dep; " : "<b>$dep</b>; "
-          }
-          val = tmp  
-        }    
-        out.print("${key}: ").print(val)
-        if(key == "pod.depends")
-          out.bEnd    
-        out.liEnd      
-    }  
-    out.ulEnd
-  }
   
   ** "Manual" download of a pod
   Void downloadPod(Str:Str args)
@@ -221,11 +125,6 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 404
-    out := res.out
-    Rendering.top(out, "Page Not Found")
-    out.div("class='span12'")
-    .print("This item does not exist.")
-    .divEnd
-    Rendering.bottom(out) 
+    tpl.renderPage(res.out, Templating.notFound, "Page not found")
   }
 }

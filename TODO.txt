@@ -1,6 +1,6 @@
 
 3) User signup
-3) User login
+3) User login/logout
 3) user authentication/permissions (60%)
 4) private repos support
 4) create indexes for the collections

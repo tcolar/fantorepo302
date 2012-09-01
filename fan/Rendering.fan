@@ -30,12 +30,18 @@ const class Rendering
   internal static Void header(WebOutStream out)
   {
     out.div("class='navbar navbar-inverse'")
-    .div("class='navbar-inner'").div("class='container-fluid'")
+    .div("class='navbar-inner'").div("class='container'")
     .a(`#`, "class='brand'").print("Pod Repo").aEnd
-    .div("class='nav-collapse collapse'").ul("class='nav'")
+    .ul("class='nav'")
     .li.a(`/`).print("Home").aEnd.liEnd
     .li.a(`/browse`).print("Browse").aEnd.liEnd
-    .ulEnd.divEnd
+    .ulEnd
+    .form("class='navbar-search pull-right' action='/search'")
+    .input("class='search-query' placeholder='Search'")
+    .formEnd
+    .ul("class='nav pull-right'")
+    .li.a(`/`).print("Login").aEnd.liEnd
+    .ulEnd
     .divEnd.divEnd
     .divEnd
   }
@@ -43,7 +49,7 @@ const class Rendering
   ** bottom of page (body closing) and closing of the stream
   static Void bottom(WebOutStream out)
   {
-    out.divEnd
+    out
     .bodyEnd
     .close
   }

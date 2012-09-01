@@ -1,0 +1,40 @@
+<div class='row-fluid'>
+    {{#pod}}
+    <h1>Pod info for : {{name}}</h1>
+    <div class='alert alert-success'>
+        To install the latest version (<a href='./{{name}}/{{lastVersion}}'>{{lastVersion}}</a>) of this pod, use:<br /><br />
+        <code><b>fanr install -r {{publicUri}}fanr/ {{name}}</b></code><br /><br />
+        Or download manually by browsing to a specific version.</div>
+    {{/pod}}
+    <div class='span6'>
+        <h4>Pod Summary: </h4>
+        {{#pod}}
+        <ul>
+            <li><b>Name: </b>{{name}}</li>
+            <li><b>Summary: </b>{{summary}}</li>
+            <li><b>Source Control Repo: <a href='{{vcsUri}}'>{{vcsUri}}</a></b></li>
+            <li>Last Update: {{#formatTimestamp}}lastModif{{/formatTimestamp}}</li>
+            <li>Current version: <a href='./{{name}}/{{pod.lastVersion}}'>{{lastVersion}}</a></li>
+            <li>Published by: {{owner}}</li>
+            <li># Of downloads: {{nbFetches}}</li>
+        </ul>
+        {{/pod}}
+        <h4>All versions: </h4>
+        <ul>
+        {{#versions}}    
+            <li><a href='./{{pod}}/{{name}}'>{{name}}</a></li>
+        {{/versions}}
+        </ul>
+    </div>
+    <div class='span5'>
+        <h4>Pod Details (Latest version):</h4>
+        <ul>
+            {{#version}}
+            <li>Size: {{#formatSize}}size{{/formatSize}}</li>
+            {{#showMeta}}
+                meta
+            {{/showMeta}}
+            {{/version}}
+        </ul>
+    </div>
+</div>

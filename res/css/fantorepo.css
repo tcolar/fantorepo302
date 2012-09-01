@@ -4,8 +4,11 @@ body > .navbar{
 }
 
 body > .navbar .brand {
-  margin-left: 20px;
-  float: right;
+  margin-right: 20px;
   font-weight: bold;
-  color: #000;
+  color: #AAAAFF;
+}
+
+body > .navbar .navbar-search{
+    margin-left:50px;
 }
