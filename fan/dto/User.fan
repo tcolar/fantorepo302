@@ -64,5 +64,5 @@ const class User: MongoDoc
   override Str toStr()
   {
     return "$userName, $email"
-  }                
+  }     
 }

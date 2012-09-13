@@ -62,7 +62,7 @@ const class AuthService : Service
   
   internal Str hashPassword(Str userName, Str password)
   {
-    salt := settings.salt
+    salt := settings.salt.toBuf.hmac("SHA1", userName.toBuf).toBase64 
     // usng same hash metod as fanr (SHA1-MAC)
     return Buf().print("$userName:$salt").hmac("SHA-1", password.toBuf).toBase64
   }

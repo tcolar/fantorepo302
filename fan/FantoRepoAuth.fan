@@ -15,7 +15,6 @@ internal const class FantoRepoAuth : WebRepoAuth
   const DB db := (Service.find(DbService#) as DbService).db
   const AuthService auth := Service.find(AuthService#)
   const SettingsService settings := Service.find(SettingsService#)
-  private const Str thesalt := settings.salt
   
   override Obj? user(Str username) 
   { 
@@ -38,7 +37,7 @@ internal const class FantoRepoAuth : WebRepoAuth
   override Str? salt(Obj? u) 
   { 
     user := u as User
-    return user == null ? null : thesalt 
+    return user == null ? null : settings.salt.toBuf.hmac("SHA1", user.userName.toBuf).toBase64 
   }
 
   override Str[] secretAlgorithms() 
