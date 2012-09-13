@@ -1,0 +1,35 @@
+<div class='row'>
+    <div class="container pagepadding">
+        <div class="span4">
+            <h3>Login</h3>
+            <form id="login" class="well" action="/login" method="POST">
+                <label>Username:</label>
+                <input name="username" type="text" value="" placeholder="Username">
+                <label>Password:</label>
+                <input name="password" type="password" value="" placeholder="Password">
+                <label></label>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <!-- TODO -->
+                <button type="submit" class="btn btn-danger" disabled>Reset Password</button>
+            </form>
+
+        </div>
+        <div class="span4"></div>
+        <div class="span4">
+            <h3>Register</h3>
+            <form id="register" class="well" action="/register" method="POST">
+                <label>Username:</label>
+                <input name="username" type="text"  value="" placeholder="Username"/>
+                <label>Email:</label>
+                <input name="email" type="text" value="" placeholder="Email"/>
+                <label>Password:</label>
+                <input name="password" type="password" value="" placeholder="Password"/>
+                <label>Password confirmation:</label>
+                <input name="password2" type="password" value="" placeholder="Password"/>
+                <label>Website (optional):</label>
+                <input name="website" type="text" value="" placeholder="Url"/>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+</div>

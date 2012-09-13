@@ -7,14 +7,14 @@
 **
 ** RepoSettings
 **
-@Serializable
-const class Settings
+const class SettingsService : Service
 {
   const Uri? repoRoot
   const Int listenPort
   const Str mongoHost
   const Int mongoPort
   const Uri publicUri
+  const Str salt // encryption salt
   
   new make()
   {
@@ -33,8 +33,13 @@ const class Settings
     mongoHost = pod.config("mongoHost", "localhost")
     mongoPort = pod.config("mongoPort", "27017").toInt
     publicUri = pod.config("publicUri", "http://127.0.0.1:8080/").toUri.plusSlash
+    salt = pod.config("salt", "")
     
-    echo(this)
+    if(salt.size < 40){
+      err := Err("We need more salt (config.props)!")
+      err.trace
+      throw(err)
+    }
   }
   
   override Str toStr()

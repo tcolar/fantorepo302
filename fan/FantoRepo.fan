@@ -21,16 +21,14 @@ const class FantoRepo : Repo
 {
   const Log log := Pod.of(FantoRepo#).log
   const File root             // Root directory of the repo
-  const DB db
+  const SettingsService settings := Service.find(SettingsService#)
+  const DB db := (Service.find(DbService#) as DbService).db
   
   ** Make for given URI which must reference a local dir
-  new make(Settings settings)
+  new make()
   {
-    echo("make repo")
     this.uri = settings.repoRoot
     this.root = File(uri)
-    Mongo mongo := Service.find(Mongo#)
-    this.db = mongo.db("fantorepo")
   }
 
   // ############################## Repo impl #################################
@@ -92,12 +90,11 @@ const class FantoRepo : Repo
     
       spec := PodSpec.load(podFile)    
     
-      isPrivate := spec.meta["fantorepo.private"]?.toBool ?: false
+      isPrivate := spec.meta["repo.private"]?.toBool ?: false
       // TODO: private -> different path
     
       // Store the file
       File dest := root + `public/$spec.name/$spec.version/${spec.name}.pod`
-      echo(dest.osPath)
       dest.parent.create
       podFile.moveTo(dest)
     

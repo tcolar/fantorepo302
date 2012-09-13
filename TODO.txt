@@ -1,6 +1,4 @@
 
-3) User signup
-3) User login/logout
 3) user authentication/permissions (60%)
 4) private repos support
 
@@ -12,7 +10,7 @@ explain install a pod, install a project, publish, private vs publish, delete pr
 Release quietly
 
 4) create indexes for the collections
-4) Lost password ?
+4) reset password ?
 4) Unit tests !
 
 5) browse/search sorting & pagination

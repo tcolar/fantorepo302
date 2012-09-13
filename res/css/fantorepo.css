@@ -12,3 +12,30 @@ body > .navbar .brand {
 body > .navbar .navbar-search{
     margin-left:50px;
 }
+
+.pagepadding{
+    padding : 20px;
+}
+
+.rounded {
+    padding: 2px;
+    margin: 2px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.flash{
+    font-weight: bold;
+    padding-top: 6px;
+    padding-left : 10px;
+    padding-bottom: 6px;
+    padding-right : 10px;
+    display:none; 
+    background-color:#FFCCCC; 
+    position:absolute; 
+    right:20px;
+    top:60px; 
+    min-width:150px;
+    max-width:350px;
+}

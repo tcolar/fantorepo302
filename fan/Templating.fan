@@ -15,20 +15,19 @@ const class Templating
   static const Str top := read(`/res/tpl/top.html`) 
   static const Str bottom := read(`/res/tpl/bottom.html`) 
   static const Str home := read(`/res/tpl/home.html`) 
+  static const Str login := read(`/res/tpl/login.html`) 
   static const Str notFound := read(`/res/tpl/404.html`) 
   static const Str podList := read(`/res/tpl/podlist.html`) 
   static const Str pod := read(`/res/tpl/pod.html`) 
   static const Str version := read(`/res/tpl/version.html`) 
   static const Str results := read(`/res/tpl/results.html`) 
   
-  const Settings settings
+  const SettingsService settings := Service.find(SettingsService#)
   
   static Str read(Uri template)
   {
     Templating#.pod.file(template).readAllStr
   }
-  
-  new make(Settings settings) {this.settings = settings}
   
   ** write the whole page (closes the stream)
   Void renderPage(WebOutStream out, Str template, Str title, [Str:Obj]? params := [:])

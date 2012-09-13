@@ -12,75 +12,74 @@ using mongo
 **
 internal const class FantoRepoAuth : WebRepoAuth
 {
-  const DB db
+  const DB db := (Service.find(DbService#) as DbService).db
+  const AuthService auth := Service.find(AuthService#)
+  const SettingsService settings := Service.find(SettingsService#)
+  private const Str thesalt := settings.salt
   
-  new make()
-  {
-    Mongo mongo := Service.find(Mongo#)
-    this.db = mongo.db("fantorepo")
-  }
-
   override Obj? user(Str username) 
   { 
-    echo("Getting instance for user : $username")
-    return username == this.username ? this : null 
+    return User.find(db, username)
   }
 
-  override Buf secret(Obj? user, Str algorithm)
+  override Buf secret(Obj? u, Str algorithm)
   {
-    if (user != this) throw Err("Invalid user: $user")
-      switch (algorithm)
+    user := u as User
+
+    switch (algorithm)
     {
-      case "PASSWORD":
-        return Buf().print(password)
       case "SALTED-HMAC-SHA1":
-        return Buf().print("$username:$userSalt").hmac("SHA-1", password.toBuf)
+        return Buf.fromBase64(user.password)
       default:
         throw Err("Unexpected secret algorithm: $algorithm")
     }
   }
 
-  override Str? salt(Obj? user) 
+  override Str? salt(Obj? u) 
   { 
-    user != null ? userSalt : null 
+    user := u as User
+    return user == null ? null : thesalt 
   }
 
   override Str[] secretAlgorithms() 
   { 
-    ["PASSWORD", "SALTED-HMAC-SHA1"] 
+    ["SALTED-HMAC-SHA1"] 
   }
 
   override Bool allowQuery(Obj? u, PodSpec? p) 
   { 
+    user := u as User
     if(p != null)
     {
       pod := PodInfo.findOne(db, p.name)
       if(pod == null)
         return false
       if(pod.isPrivate)
-        return pod.owner == username
+        return pod.owner == user.userName
     }  
     return true
   }
   
   override Bool allowRead(Obj? u, PodSpec? p) 
   {
+    user := u as User
     if(p != null)
     {
       pod := PodInfo.findOne(db, p.name)
       if(pod == null)
         return false
       if(pod.isPrivate)
-        return pod.owner == username
+        return pod.owner == user.userName
     }  
     return true
   }
   
   override Bool allowPublish(Obj? u, PodSpec? p) 
   {
+    user := u as User
     // Need valid user/password to publish
-    if(username == null)
-      throw Err("You need to provide a valid username and password to publish.")
+    if(u == null)
+      throw Err("You Have to provide a valid username and password to publish.")
       
     if(p != null)
     {  
@@ -88,7 +87,7 @@ internal const class FantoRepoAuth : WebRepoAuth
       validateSpec(p)
  
       pod := PodInfo.findOne(db, p.name)
-      if(pod != null && pod.owner != username)
+      if(pod != null && pod.owner != user.userName)
         throw Err("There is already a pod named $p.name in the repository by a different owner. Note that it might not show if it's private)")  
       version := PodVersion.find(db, p.name, p.version.toStr)
       if(version != null)
@@ -120,7 +119,4 @@ internal const class FantoRepoAuth : WebRepoAuth
     str != null && str.size()> 1
   }
 
-  private const Str? username := "TODO"
-  private const Str userSalt := "TODO"
-  private const Str password := "TODO"
 }

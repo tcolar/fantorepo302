@@ -48,7 +48,7 @@ const class PodInfo : MongoDoc
       
       this.lastVersion = spec.version.toStr   
         
-      this.isPrivate = spec.meta["fantorepo.private"]?.toBool ?: false    
+      this.isPrivate = spec.meta["repo.private"]?.toBool ?: false    
       this.vcsUri = spec.meta["vcs.uri"]?.toStr 
       this.summary = spec.summary            
   }

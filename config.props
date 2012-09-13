@@ -8,3 +8,5 @@ mongHost=localhost
 monPort=27017
 
 publicUri=http://mysuperrepo.com/
+
+salt="Need more salt"

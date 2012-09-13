@@ -7,6 +7,7 @@ using draft
 using fanr
 using mongo
 using web
+using concurrent
 
 **
 ** Master Server mod
@@ -14,13 +15,16 @@ using web
 ** 
 const class FantoServer : DraftMod
 {
-  const Settings settings := Settings()
-  const Templating tpl := Templating(settings)
-  const Mongo mongo := Mongo(settings.mongoHost, settings.mongoPort)
-  const DB db := mongo.start.db("fantorepo")
+  const SettingsService settings := SettingsService().start
+  const DbService dbSvc := DbService().start
+  internal const AuthService auth := AuthService().start
+  const Templating tpl := Templating()
+  const Mongo mongo := dbSvc.mongo
+  const DB db := dbSvc.db
+  
   const WebRepoMod repoMod := WebRepoMod() {
-    repo = FantoRepo(settings)
-    auth = FantoRepoAuth()
+    repo = FantoRepo()
+    it.auth = FantoRepoAuth()
   }
   
   ** Constructor.
@@ -37,6 +41,9 @@ const class FantoServer : DraftMod
     router = Router {
       routes = [
         Route("/", "GET", #index),
+        Route("/login", "GET", #login), 
+        Route("/login", "POST", #ajaxLogin), 
+        Route("/register", "POST", #ajaxRegister), 
         Route("/search", "POST", #search), 
         Route("/browse", "GET", #listPods), 
         Route("/browse/{pod}", "GET", #podInfo),
@@ -51,9 +58,61 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    tpl.renderPage(res.out, Templating.home, "Pod repo home")
+    renderPage(res.out, Templating.home, "Pod repo - home")
   }
 
+  ** Display index page.
+  Void login()
+  {
+    res.headers["Content-Type"] = "text/html"
+    res.statusCode = 200
+    renderPage(res.out, Templating.login, "Pod repo - login")
+  }
+  
+  ** Process login form if given (ajax)
+  Void ajaxLogin()
+  {
+    form := req.form
+    res.headers["Content-Type"] = "text/plain"
+    user := auth.login(req, form)
+    if(user == null)
+    {
+      res.statusCode = 500
+      res.out.print("Login failed.</br/>Check the username and password").close                      
+    }
+    else
+    {        
+      res.statusCode = 200
+      res.out.close;        
+    }    
+  }
+
+  Void logout()
+  {
+    auth.logout(req)
+    index
+  }
+  
+  ** Process regsitration form (ajax)    
+  Void ajaxRegister()
+  {
+    form := req.form
+    errors := auth.validateNewUser(form)
+    res.headers["Content-Type"] = "text/plain"
+    if(errors.size == 0)
+    {
+      auth.createUser(form)
+      auth.login(req, form) // log in as the user right away 
+      res.statusCode = 200
+      res.out.close;
+    }
+    else
+    {
+      res.statusCode = 500
+      res.out.print(errors.join("<br/>")).close;      
+    }        
+  }
+  
   ** Page listing all the pods
   Void listPods()
   {
@@ -62,7 +121,7 @@ const class FantoServer : DraftMod
     // sorted by name -> keep sorted by last update instead ??
     // TODO: do frontend srting later (jquery ? )
     pods := PodInfo.list(db).dup.sort |a, b| {return a.nameLower.compare(b.nameLower)}
-    tpl.renderPage(res.out, Templating.podList, "Pod listing", ["pods" : pods])    
+    renderPage(res.out, Templating.podList, "Pod listing", ["pods" : pods])    
   }
   
   ** Page about a specific pod
@@ -86,7 +145,7 @@ const class FantoServer : DraftMod
     data["version"] = version
     data["versions"] = versions
     
-    tpl.renderPage(res.out, Templating.pod, "Pod info for : $pod.name", data)  
+    renderPage(res.out, Templating.pod, "Pod info for : $pod.name", data)  
   } 
   
   ** Page about a specific version of a pod
@@ -104,7 +163,7 @@ const class FantoServer : DraftMod
     
     data["version"] = version
     
-    tpl.renderPage(res.out, Templating.version, "Version details for : $version.pod - $version.name", data)  
+    renderPage(res.out, Templating.version, "Version details for : $version.pod - $version.name", data)  
   } 
   
   ** "Manual" download of a pod
@@ -128,7 +187,7 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 404
-    tpl.renderPage(res.out, Templating.notFound, "Page not found")
+    renderPage(res.out, Templating.notFound, "Page not found")
   }
   
   ** Run a search on the pods (name & summary)
@@ -147,6 +206,15 @@ const class FantoServer : DraftMod
     data["pods"] = pods
     data["query"] = query
     
-    tpl.renderPage(res.out, Templating.results, "Search results", data)  
+    renderPage(res.out, Templating.results, "Search results", data)  
   }
+  
+  Void renderPage(WebOutStream out, Str template, Str title, [Str:Obj]? params := [:])
+  {
+    user := auth.curUser(req)
+    if(user != null)
+      params["user"] = user
+    tpl.renderPage(out, template, title, params)
+  }
+
 }
