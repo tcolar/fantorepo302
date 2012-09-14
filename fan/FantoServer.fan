@@ -222,8 +222,13 @@ const class FantoServer : DraftMod
     query := form["query"]
     
     pods := PodInfo.searchPods(db, query)
-    
-    pods = auth.filterPodList(req, pods)
+    echo(pods)
+    pods = pods.findAll |Str:Obj? pod, Int index -> Bool| 
+    {
+      echo(pod)
+      Bool isPrivate := pod["isPrivate"]
+      return ! isPrivate || pod["owner"] == auth.curUser(req)?.userName
+    }
     
     Str:Obj? data := [:] 
     data["pods"] = pods

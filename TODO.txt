@@ -1,7 +1,10 @@
 4) Home page -> top downloads -> # of pods in repo (&versions ? )
-4) home page -> most recent publishes
+4) home page -> most recent publishes (pod version)
 4) Home / explanation page: explained how to publish and the meta requirements and so on
 explain install a pod, install a project, publish, private vs publish, delete private to make public etc ...
+-> how to get a pod  explain
+-> how to publish a pod : explain
+4) FAQ / contact page -> 
 
 Release quietly
 
