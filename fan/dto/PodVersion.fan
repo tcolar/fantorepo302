@@ -81,4 +81,9 @@ const class PodVersion : MongoDoc
     ps := PodSpec.make(meta, File.os(filePath))
     return ps
   }  
+  
+  override Str toStr()
+  {
+    return "$pod - $name"
+  }
 }

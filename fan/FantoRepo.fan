@@ -63,8 +63,6 @@ const class FantoRepo : Repo
     log.info("Query : $query")
     q := Query.fromStr(query)
     return MongoUtils.runFanrQuery(db, q, numVersions)
-    // note that WebRepoMod with filter this further with auth.allowQuery
-    // that means numVersions might not be respected (only if only some versions allowed -> unlikely)
   }
 
   override InStream read(PodSpec spec)
@@ -79,22 +77,25 @@ const class FantoRepo : Repo
     return file.in
   }
 
-  override PodSpec publish(File podFile)
+  override PodSpec publish(File podFile, Obj? user := null)
   {
-    log.info("Publishing : $podFile")
+    // Note: by the time we get here it has been autenticated and validated by FantomRepoAuth
+    owner := Actor.locals["fanr-user"]
+    
+    log.info("Publishing : $podFile as $owner")
     PodVersion? podVer 
     
     try
     { 
-      Str owner := "TODO" // TODO: user name
-    
       spec := PodSpec.load(podFile)    
     
       isPrivate := spec.meta["repo.private"]?.toBool ?: false
-      // TODO: private -> different path
     
       // Store the file
-      File dest := root + `public/$spec.name/$spec.version/${spec.name}.pod`
+      File dest := isPrivate ?
+        root + `private/$owner/$spec.name/$spec.version/${spec.name}.pod`
+        : root + `public/$spec.name/$spec.version/${spec.name}.pod`
+          
       dest.parent.create
       podFile.moveTo(dest)
     

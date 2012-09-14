@@ -22,18 +22,11 @@ const class FantoServer : DraftMod
   const Mongo mongo := dbSvc.mongo
   const DB db := dbSvc.db
   
-  const WebRepoMod repoMod := WebRepoMod() {
-    repo = FantoRepo()
-    it.auth = FantoRepoAuth()
-  }
-  
   ** Constructor.
   new make()
   {    
-    // TODO: check authentication here for get requests to /private ??
-    
     // Will service "standard" fanr REST requests at /fanr/
-    subMods = ["fanr": repoMod]
+    subMods = ["fanr": WebModWrapper()]
     
     // Rest of web services. Index pages, browsing etc ...
     pubDir = null
@@ -43,12 +36,15 @@ const class FantoServer : DraftMod
         Route("/", "GET", #index),
         Route("/login", "GET", #login), 
         Route("/login", "POST", #ajaxLogin), 
+        Route("/logout", "GET", #logout), 
         Route("/register", "POST", #ajaxRegister), 
         Route("/search", "POST", #search), 
         Route("/browse", "GET", #listPods), 
         Route("/browse/{pod}", "GET", #podInfo),
         Route("/browse/{pod}/{version}", "GET", #versionInfo),
-        Route("/browse/{pod}/{version}/{file}", "GET", #downloadPod),  
+        Route("/mypods", "GET", #myPods), 
+        Route("/get/{pod}/{version}/{file}", "GET", #downloadPod),  
+        Route("/remove/{pod}", "GET", #removePod),  
       ]
     }
   }
@@ -121,14 +117,26 @@ const class FantoServer : DraftMod
     // sorted by name -> keep sorted by last update instead ??
     // TODO: do frontend srting later (jquery ? )
     pods := PodInfo.list(db).dup.sort |a, b| {return a.nameLower.compare(b.nameLower)}
+    
+    pods = auth.filterPodList(req, pods)
+    
     renderPage(res.out, Templating.podList, "Pod listing", ["pods" : pods])    
+  }
+  
+  ** Page listing all the pods
+  Void myPods()
+  {
+    res.headers["Content-Type"] = "text/html"
+    res.statusCode = 200
+    pods := PodInfo.listByOwner(db, auth.curUser(req)).dup.sort |a, b| {return a.nameLower.compare(b.nameLower)}
+    renderPage(res.out, Templating.myPods, "My pods", ["pods" : pods])    
   }
   
   ** Page about a specific pod
   Void podInfo(Str:Str args)
-  {
+  {    
     pod := PodInfo.findOne(db, args["pod"])
-    if(pod == null)
+    if(pod == null || ! auth.canSeePod(req, pod))
     {
       notFound
       return
@@ -151,6 +159,8 @@ const class FantoServer : DraftMod
   ** Page about a specific version of a pod
   Void versionInfo(Str:Str args)
   {
+    if(! auth.canSeePod(req, PodInfo.findOne(db, args["pod"]))) {notFound; return}
+    
     version := PodVersion.find(db, args["pod"], args["version"])
     if(version == null)
     {
@@ -169,7 +179,8 @@ const class FantoServer : DraftMod
   ** "Manual" download of a pod
   Void downloadPod(Str:Str args)
   {
-    // TODO: deal with private pods, only allow if logged in and owner
+    if(! auth.canSeePod(req, PodInfo.findOne(db, args["pod"]))) {notFound; return}
+    
     version := PodVersion.find(db, args["pod"], args["version"])
     if(version == null || version.filePath.toUri.name != args["file"])
     {
@@ -181,6 +192,18 @@ const class FantoServer : DraftMod
     // serve the file
     FileWeblet(File.os(version.filePath)).onService
   } 
+  
+  ** "Manual" download of a pod
+  Void removePod(Str:Str args)
+  {
+    name:= args["pod"]
+    pod := PodInfo.findOne(db, name)
+    if(pod !=null && pod.isPrivate && auth.isPodOwner(req, pod))
+    {
+      PodInfo.remove(db, pod.nameLower)
+    }  
+    res.redirect(`/mypods`)
+  }
   
   ** Not found when browsing
   Void notFound()
@@ -200,8 +223,8 @@ const class FantoServer : DraftMod
     
     pods := PodInfo.searchPods(db, query)
     
-    // filter out according to permissions    
-    // TODO : specs = specs.findAll |pod| { repoMod.auth.allowQuery(user, pod) }
+    pods = auth.filterPodList(req, pods)
+    
     Str:Obj? data := [:] 
     data["pods"] = pods
     data["query"] = query
@@ -216,5 +239,21 @@ const class FantoServer : DraftMod
       params["user"] = user
     tpl.renderPage(out, template, title, params)
   }
+}
 
+const class WebModWrapper : WebMod
+{
+  const WebRepoMod repoMod := WebRepoMod() {
+    repo = FantoRepo()
+    auth = FantoRepoAuth()
+  }
+  
+  override Void onService()
+  {
+    // Stash the user name since FantoRepo.publish does not have access to it
+    username := req.headers["Fanr-Username"]
+    Actor.locals["fanr-user"] = username
+    
+    repoMod.onService
+  }
 }

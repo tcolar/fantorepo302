@@ -108,4 +108,25 @@ const class AuthService : Service
     user.insert(db);
     return user
   }
+  
+  ** Remove pods the user can't see
+  PodInfo[] filterPodList(WebReq req, PodInfo[] pods){
+    pods.findAll |pod, index -> Bool| 
+    {
+      return canSeePod(req, pod)
+    }
+  }
+  
+  ** Wether the current user is allowed read acces to this pod
+  Bool canSeePod(WebReq req, PodInfo pod){
+      if( ! pod.isPrivate) 
+        return true
+      return isPodOwner(req, pod)      
+  }
+  
+  ** Whether the current user owns this pod (published it)
+  Bool isPodOwner(WebReq req, PodInfo pod){
+      user := curUser(req)
+      return user == null ? false : pod.owner == user.userName      
+  }
 }

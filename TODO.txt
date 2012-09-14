@@ -1,9 +1,5 @@
-
-3) user authentication/permissions (60%)
-4) private repos support
-
-4) allow to delete private pod (web interface)? ... i guess so, so it can then be made public
 4) Home page -> top downloads -> # of pods in repo (&versions ? )
+4) home page -> most recent publishes
 4) Home / explanation page: explained how to publish and the meta requirements and so on
 explain install a pod, install a project, publish, private vs publish, delete private to make public etc ...
 

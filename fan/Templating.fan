@@ -18,6 +18,7 @@ const class Templating
   static const Str login := read(`/res/tpl/login.html`) 
   static const Str notFound := read(`/res/tpl/404.html`) 
   static const Str podList := read(`/res/tpl/podlist.html`) 
+  static const Str myPods := read(`/res/tpl/mypods.html`) 
   static const Str pod := read(`/res/tpl/pod.html`) 
   static const Str version := read(`/res/tpl/version.html`) 
   static const Str results := read(`/res/tpl/results.html`) 

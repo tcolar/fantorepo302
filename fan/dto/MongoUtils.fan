@@ -54,6 +54,12 @@ class MongoUtils
     return results
   }
   
+  ** remove an item from the db
+  static Void remove(DB db, Type type, Str:Obj? filter)
+  {
+    db.collection(mongoDocName(type)).remove(filter)
+  }
+  
   ** Take a standard fan query and build a mongo query object from it
   ** This should be much faster than fetching all and filtering locally as done by query.include
   ** 

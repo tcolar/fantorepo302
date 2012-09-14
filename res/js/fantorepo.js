@@ -5,6 +5,13 @@ function flash(message, color) {
     $('#flash').slideDown('medium');
 };
 
+$(".confirmit").on("click", function(){
+    console.debug(this);
+    if( ! confirm(this.title)){
+        event.preventDefault(); 
+    }
+});
+    
 $("#register").submit(function(){
     $.ajax( {
         type: "POST",
@@ -26,7 +33,7 @@ $("#login").submit(function(){
         url: $("#login").attr( 'action' ),
         data: $("#login").serialize(),
         success: function(  ) {
-            $(location).attr('href','/');
+            $(location).attr('href','/mypods');
         },
         error: function( resp ) {
             flash(resp.responseText, "#FFCCFF")
@@ -34,3 +41,4 @@ $("#login").submit(function(){
     } ); 
     return false;
 });
+

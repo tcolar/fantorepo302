@@ -54,7 +54,7 @@ internal const class FantoRepoAuth : WebRepoAuth
       if(pod == null)
         return false
       if(pod.isPrivate)
-        return pod.owner == user.userName
+        return pod.owner == user?.userName
     }  
     return true
   }
@@ -83,14 +83,17 @@ internal const class FantoRepoAuth : WebRepoAuth
     if(p != null)
     {  
       // wil throw a descriptive Err if not valid  
-      validateSpec(p)
+      isPrivate := p.meta["repo.private"]?.toBool ?: false
+      validateSpec(p, isPrivate)
  
       pod := PodInfo.findOne(db, p.name)
+      if(pod!=null && (pod.isPrivate != isPrivate))
+        throw Err("Not allowing both a public and a private version of the same pod.")          
       if(pod != null && pod.owner != user.userName)
-        throw Err("There is already a pod named $p.name in the repository by a different owner. Note that it might not show if it's private)")  
+        throw Err("There is already a pod (possibly private) named $p.name in the repository by a different owner.")  
       version := PodVersion.find(db, p.name, p.version.toStr)
       if(version != null)
-        throw Err("There is already a pod of that name and version ($p) in the repository. Note that it might not show it's private")      
+        throw Err("There is already a pod (possibly private) of that name and version ($p) in the repository.")      
     }
     
     return true
@@ -98,18 +101,22 @@ internal const class FantoRepoAuth : WebRepoAuth
 
   ** Validate the pod spec (upon publish)
   ** Throw descriptive errors if validation fails
-  Void validateSpec(PodSpec p)
+  Void validateSpec(PodSpec p, Bool isPrivate)
   {
     if( ! checkStr(p.name) || Utils.standardPods.contains(p.name))
       throw Err("Invalid pod name")
     if( ! checkStr(p.version.toStr))
       throw Err("A pod version is required ('version' build.fan)")
-    if( ! checkStr(p.summary))
-      throw Err("A pod summary is required ('summary' build.fan)")
-    if( ! checkStr(p.meta["vcs.uri"]) && ! checkStr(p.meta["org.uri"]))
-      throw Err("Either vcs.uri or org.uri entries are required (in meta of build.fan)")
-    if( ! checkStr(p.meta["license.name"]))
-      throw Err("A license.name entry required (in meta  build.fan)")            
+      
+    if( ! isPrivate)
+    {  
+      if( ! checkStr(p.summary))
+        throw Err("A pod summary is required ('summary' build.fan)")
+      if( ! checkStr(p.meta["vcs.uri"]) && ! checkStr(p.meta["org.uri"]))
+        throw Err("Either vcs.uri or org.uri entries are required (in meta of build.fan)")
+      if( ! checkStr(p.meta["license.name"]))
+        throw Err("A license.name entry required (in meta  build.fan)")  
+    }        
   }
   
   ** check not null and at least one char in that str 
