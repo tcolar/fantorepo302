@@ -54,6 +54,28 @@ class MongoUtils
     return results
   }
   
+  ** Most doenloade public pods
+  ** Because we bypass fanlink we get a plain list as the result
+  static List topPods(DB db, Int nbItems := 5)
+  {
+    collectionName := mongoDocName(PodInfo#)
+    cursor := db.collection(collectionName).find(doc("isPrivate", false))
+    cursor.sort(["nbFetches" : Mongo.DESCENDING])
+    [Str:Str][] results := cursor.limit(nbItems).toList 
+    return results
+  }
+  
+  ** Most recenty updated public pods
+  ** Because we bypass fanlink we get a plain list as the result
+  static List recentPods(DB db, Int nbItems := 5)
+  {
+    collectionName := mongoDocName(PodInfo#)
+    cursor := db.collection(collectionName).find(doc("isPrivate", false))
+    cursor.sort(["lastModif" : Mongo.DESCENDING])
+    [Str:Str][] results := cursor.limit(nbItems).toList
+    return results
+  }
+  
   ** remove an item from the db
   static Void remove(DB db, Type type, Str:Obj? filter)
   {

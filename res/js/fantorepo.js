@@ -6,10 +6,18 @@ function flash(message, color) {
 };
 
 $(".confirmit").on("click", function(){
-    console.debug(this);
     if( ! confirm(this.title)){
         event.preventDefault(); 
     }
+});
+
+$(".searchlink").on("click", function(){
+    var color = $(".search-query").css("background-color")
+    $(".search-query").css("background-color", "#bbbbee");
+    setTimeout(function(){
+        $(".search-query").css("background-color", color);
+    }, 500);
+    event.preventDefault(); 
 });
     
 $("#register").submit(function(){

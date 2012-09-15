@@ -1,5 +1,66 @@
 <div class='row-fluid'>
-    <div class='span12'>
-        TBD    
+    <div class='span9'>
+        <h2>What's this</h2>
+        This is a <a href="http://www.fantom.org/" target="_blank">Fantom</a> Pod repository. Anybody can publish Fantom pods to it.<br/>
+        The fanr root is: <b><code>{{publicUri}}fanr/</code></b>
+        <br/><br/>
+        Here are the core features:<br/>
+        <ul>
+            <li>You can <b>find pods</b>, either by using the <a href="#" class="searchlink">search</a> form on this page, or by using <a  target="_blank" href="http://fantom.org/doc/docFanr/">fanr</a></li>
+            <li>You can <b>install pods</b> from this repository using the fanr.</li>
+            <li>You can <b>publish pods</b>. They can be published <b>publicly</b> (anybody access see it) or <b>privately</b> (only YOU can access it)</li>                 
+        </ul>
+        <h2>Finding pods</h2>
+        You can search for pods using the <a href="/browse">browse</a> or <a href="#" class="searchlink">search</a> features here (searches across pod names and summaries), or by using the extensive <a  target="_blank" href="http://fantom.org/doc/docFanr/Queries.html">fanr query syntax</a><br/>
+        For example: <b><code>fanr query -r {{publicUri}}fanr/ "*mongo*"</code></b><br/><br/>
+        <h2>Installing pods:</h2>
+        Once you have found a pod pf your liking, you can use fanr to install it<br/>
+        For example (latest version) : <b><code>fanr install -r {{publicUri}}fanr/ "somepod"</code></b><br/>
+        Or for a specific version : <b><code>fanr install -r {{publicUri}}fanr/ "somepod 1.0.0"</code></b> <br/><br/>
+        <h2>Publishing pods to this repository</h2>
+        There are some requirement to be met before you can publish:
+        <ul>
+            <li>You will need to <a href="/login">register</a> for an account, so we know who owns which pods.
+            <li>Make sure it has the <b>REQUIRED METADATA</b> in build.fan : <b>name, version, summary, vcs.ui, license.name (<a href="/help#metapub">More infos/Example</a>)</b></li>
+            <li>The pod name must be valid and unique and not already in use by someone else.</li>
+            <li>The pod version must be unique for this pod.</li>
+        </ul>
+        <h3>Public pods</h3>
+        You use the fanr command with your login and password to pubish a pod:<br/>
+        Publish: <b><code>fanr publish -r {{publicUri}}fanr/ mypod -u yourusername</code></b><br/><br/>
+        <h3>Private pods</h3>
+        To release a pod privately (only you an access it):<br/>
+        You <b>MUST add the meta "repo.private":"true" in build.fan</b>. (<a href="/help#metapriv">example</a>)<br/><br/>
+        Publish: <b><code>fanr publish -r {{publicUri}}fanr/ mypod -u yourusername</code></b><br/>
+        <br/>
+        Of course to install/query private pods it you will have to provide your username and password as well<br/>
+        Example: <b><code>fanr install -r {{publicUri}}fanr/ "somepod 1.0.0" -u yourusername</code></b> 
+
+    </div>    
+    <div class='span3'>
+        <div class="well">
+            <h3>Top Downloads: </h3>
+            <ul>
+                {{#top}}
+                <li>
+                    <a href='/browse/{{name}}'>{{name}}</a>
+                    - <b>{{nbFetches}}</b>
+                </li>
+                {{/top}}
+            </ul>
+        </div>
+
+        <div class="well">
+            <h3>Recently Published:</h3>
+            <ul>
+                {{#recent}}
+                <li>
+                    <a href='/browse/{{name}}'>{{name}}</a>
+                    <a href='/browse/{{name}}/{{lastVersion}}'>({{lastVersion}})</a>
+                    <br/>{{#formatTimestamp}}lastModif{{/formatTimestamp}}
+                </li>
+                {{/recent}}
+            </ul>
+        </div>
     </div>
 </div>

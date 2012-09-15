@@ -16,6 +16,7 @@ const class Templating
   static const Str bottom := read(`/res/tpl/bottom.html`) 
   static const Str home := read(`/res/tpl/home.html`) 
   static const Str login := read(`/res/tpl/login.html`) 
+  static const Str help := read(`/res/tpl/help.html`) 
   static const Str notFound := read(`/res/tpl/404.html`) 
   static const Str podList := read(`/res/tpl/podlist.html`) 
   static const Str myPods := read(`/res/tpl/mypods.html`) 
@@ -53,8 +54,8 @@ const class Templating
   // lambda to display ok looking DateTimes in locale format
   const static Func formatTimestamp := |Str var, |Str->Obj?| context, Func render -> Obj?| 
   {
-    DateTime date := DateTime(context(var))
-    return date.toLocale()
+    date := DateTime.fromJava(context(var))
+    return date.toLocale("MMM DDD YYYY - h:m zzz")
   }
   
   // lambda to format a size (in B/KB/MB/GB format))

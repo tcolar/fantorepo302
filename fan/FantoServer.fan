@@ -38,6 +38,7 @@ const class FantoServer : DraftMod
         Route("/login", "POST", #ajaxLogin), 
         Route("/logout", "GET", #logout), 
         Route("/register", "POST", #ajaxRegister), 
+        Route("/help", "GET", #help), 
         Route("/search", "POST", #search), 
         Route("/browse", "GET", #listPods), 
         Route("/browse/{pod}", "GET", #podInfo),
@@ -54,9 +55,18 @@ const class FantoServer : DraftMod
   {
     res.headers["Content-Type"] = "text/html"
     res.statusCode = 200
-    renderPage(res.out, Templating.home, "Pod repo - home")
+    top := MongoUtils.topPods(db)
+    recent := MongoUtils.recentPods(db)
+    renderPage(res.out, Templating.home, "Pod repo - home", ["top": top, "recent": recent])
   }
 
+  Void help()
+  {
+    res.headers["Content-Type"] = "text/html"
+    res.statusCode = 200
+    renderPage(res.out, Templating.help, "Pod repo - help")
+  }
+  
   ** Display index page.
   Void login()
   {
@@ -221,8 +231,9 @@ const class FantoServer : DraftMod
     form := req.form
     query := form["query"]
     
+    // Warning : list of mongo docs (not a PodInfo list)
     pods := PodInfo.searchPods(db, query)
-    echo(pods)
+    
     pods = pods.findAll |Str:Obj? pod, Int index -> Bool| 
     {
       echo(pod)

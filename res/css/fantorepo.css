@@ -1,6 +1,7 @@
 body > .navbar{
     padding-bottom : 0px;
     margin-bottom : 0px;
+    font-family: Georgia,'Times New Roman',times,serif;
 }
 
 body > .navbar .brand {
@@ -38,4 +39,10 @@ body > .navbar .navbar-search{
     top:60px; 
     min-width:150px;
     max-width:350px;
+}
+
+.topic{
+    width : 98%;
+    background-color : #ddddff;
+    padding-left: 20px;
 }

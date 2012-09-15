@@ -21,7 +21,7 @@ const class PodInfo : MongoDoc
   
   const Str? dirPath // dir of this pod
   
-  const Str? lastModif // last time it was updated
+  const Int? lastModif // last time it was updated
   const Str? owner// user that published it
   
   const Str? lastVersion
@@ -44,7 +44,7 @@ const class PodInfo : MongoDoc
       this.owner = owner
       this.dirPath = newFile.parent.parent.osPath
               
-      this.lastModif = DateTime.now.toStr
+      this.lastModif = DateTime.now.toJava
       
       this.lastVersion = spec.version.toStr   
         
@@ -125,7 +125,7 @@ const class PodInfo : MongoDoc
     filterObj := PodInfo {
       it.name = this.name
       it.nameLower = this.nameLower
-      it.lastModif = DateTime.now.toStr
+      it.lastModif = DateTime.now.toJava
       it.lastVersion = this.lastVersion
       it.isPrivate = this.isPrivate
       it.vcsUri = this.vcsUri
@@ -156,5 +156,5 @@ const class PodInfo : MongoDoc
   static Void decDependants(DB db, Str podName)
   {
     MongoUtils.atomicInc(db, PodInfo#, PodInfo#nbDependants, [PodInfo#name.name : podName], -1)
-  }  
+  }    
 }

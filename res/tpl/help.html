@@ -1,0 +1,87 @@
+<div class='row-fluid'>
+    <div class='span12'>
+        <h3 class="rounded topic">There is a problem, how do I contact you ?</h3>
+        For now just email me at tcolar at the colar.net domain.
+        <h3 class="rounded topic">I'm tired of having to always add "-r {{publicUri}}fanr/ -u myuser" to all my fanr commands.</h3>
+        If you only uses this repository then you could set this repo as the default in your Fantom env.<br/>
+        You would edit [FAN_HOME]/etc/fanr/config.props like this:
+        <pre><code>
+repo={{publicUri}}fanr/
+numVersions=5
+username=myusername
+password=secret
+        </code></pre>
+        After that you can use fanr without having to specify -r, -u, -parameters.
+        <h3 class="rounded topic">What are the differences between a public pod and a private pod?</h3>
+        You would share a pod to the world by making it public.
+        You would use a private pod when you don't want anybody else to have access to it or for stagging purposes.
+        <ul>
+            <li>Only the publisher of a pod can access a private pod. needs to be logged in to see it. (including with fanr)</li>
+            <li>A private pod can be removed by it's owner, but a public pod can never be removed.</li>
+        </ul>
+
+        <a name="metapub"></a>
+        <h3 class="rounded topic">What is the required pod data (build.fan) for a pubic pod?</h3>
+        <ul>
+            <li>The pod <b>name</b> must be unique in the repo</li>
+            <li>The pod <b>version</b> must be provided and be unique</li>
+            <li>A pod <b>summary</b> is required ... so we know what the pod is about</li>
+            <li>At least one of <b>vcs.uri or org.uri</b> are required. So we know where to report issues about this pod</li>
+            <li>The </b>license.name</b> is required, because it should be defined for a public pod.</li>
+        </ul>
+        <br/>
+        Minimal example of build.fan (<b>Public pod)</b>:
+        <pre><code>
+using build
+
+class Build : BuildPod
+{
+  new make()
+  {
+    podName = "mypod"
+    summary = "A really cool pod for testing the repo"
+    version = Version("1.0.8")
+    meta = ["vcs.uri" : "http://bitbucket.com/user/mypod/", "license.name":"GPL"]
+    depends = ["sys 1.0"]
+    srcDirs = [`fan/`]
+  }
+}
+                </code></pre>
+
+        <br/><br/>
+        <a name="metapriv"></a>
+        <h3 class="rounded topic">What is the required pod data (build.fan) for a private pod ?<</h3>
+        For a private pod it's less picky:
+        <ul>
+            <li>The <b>pod name</b> must be unique in the repo.</li>
+            <li>The pod <b>version</b> must be provided and be unique.</li>
+            <li><b>it MUST have the "repo.private":"true" metadata.</b></li>
+        </ul>
+
+        Minimal example of build.fan <b>(private pod)</b>:
+        <pre><code>
+using build
+
+class Build : BuildPod
+{
+  new make()
+  {
+    podName = "myprivatepod"
+    summary = ""
+    version = Version("1.0.3")
+    meta = ["repo.private":"true"]
+    depends = ["sys 1.0"]
+    srcDirs = [`fan/`]
+  }
+}
+                </code></pre>
+
+        <h3>How can I make a private pod public ?</h3>
+        Here are the steps, basically it cannot be both private and public so you have to re-publish it as public.
+        <ul>
+            <li>Login into this site, browse to the private pod and remove it (remove link)</li>
+            <li>Change your pod build.fan to remove the repo.private property and then build your pod</li>
+            <li>Publish the pod (it will now be public)</li>
+        </ul>
+    </div>
+</div>
