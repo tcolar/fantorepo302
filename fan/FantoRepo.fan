@@ -77,7 +77,7 @@ const class FantoRepo : Repo
     return file.in
   }
 
-  override PodSpec publish(File podFile, Obj? user := null)
+  override PodSpec publish(File podFile)
   {
     // Note: by the time we get here it has been autenticated and validated by FantomRepoAuth
     owner := Actor.locals["fanr-user"]
