@@ -12,7 +12,7 @@
 
 USER="fantom" # User we wil run fantom as
 FANTOM_HOME="/home/fantom/fan"
-FAN_ARGS="draft fantorepo"
+FAN_ARGS="draft -prod fantorepo"
 WORKDIR="/home/fantom"
 
 ###### Start script ########################################################
