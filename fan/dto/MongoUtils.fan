@@ -44,8 +44,8 @@ class MongoUtils
     collectionName := mongoDocName(PodInfo#)
     doc := doc(Str<|$or|>, 
       [
-        doc("nameLower", doc(Str<|$regex|>, Regex.glob(query))),
-        doc("summary", doc(Str<|$regex|>, Regex.glob(query)))
+        doc("nameLower", doc(Str<|$regex|>, query)),
+        doc("summary", doc(Str<|$regex|>, query))
       ]);    
     cursor := db.collection(collectionName).find(doc)  
     [Str:Str][] results := cursor.toList
