@@ -97,7 +97,7 @@ const class FantoRepo : Repo
         : root + `public/$spec.name/$spec.version/${spec.name}.pod`
           
       dest.parent.create
-      podFile.moveTo(dest)
+      podFile.copyTo(dest)
     
       prevInfo := PodInfo.findOne(db, spec.name)
       info := PodInfo.makeNew(spec, dest, owner) 
