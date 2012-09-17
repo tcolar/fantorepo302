@@ -13,7 +13,7 @@ class Build : BuildPod
   new make()
   {
     podName = "fantorepo"
-    summary = "public fanr repository implementation"
+    summary = "Public / private Fantom pod repository."
     meta = ["vcs.uri":"http://www.github.com/tcolar/fantorepo/",
 	    "license.name":"MIT"]
     depends = ["sys 1.0+", "draft 1.0+", "fanr 1.0+", "concurrent 1.0+", 
