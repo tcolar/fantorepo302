@@ -10,7 +10,7 @@
 # Short-Description: fantorepo
 ### END INIT INFO
 
-USER="fantom" # User we wil run fantom as
+USER="fantom" # User we will run fantom as
 FANTOM_HOME="/home/fantom/fan"
 FAN_ARGS="draft -prod fantorepo"
 WORKDIR="/home/fantom"

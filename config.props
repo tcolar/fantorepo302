@@ -1,12 +1,12 @@
 // Example config.props to copy into [fantom_home]/env/fantorepo/config.props
 
-repoRoot=/opt/fantorepo/
+repoRoot=/data/fantorepo/
 
 listenPort=8100
 
 mongHost=localhost
 monPort=27017
 
-publicUri=http://mysuperrepo.com/
+publicUri=http://repo.status302.com/
 
 salt="Need more salt"
