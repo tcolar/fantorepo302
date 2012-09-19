@@ -22,6 +22,8 @@ const class FantoServer : DraftMod
   const Mongo mongo := dbSvc.mongo
   const DB db := dbSvc.db
   
+  const Log log := FantoServer#.pod.log
+  
   ** Constructor.
   new make()
   {    
@@ -231,12 +233,14 @@ const class FantoServer : DraftMod
     form := req.form
     query := form["query"]
     
+    log.info("Search for: $query")
+    
     // Warning : list of mongo docs (not a PodInfo list)
     pods := PodInfo.searchPods(db, query)
     
     pods = pods.findAll |Str:Obj? pod, Int index -> Bool| 
     {
-      echo(pod)
+      log.info("found: $pod")
       Bool isPrivate := pod["isPrivate"]
       return ! isPrivate || pod["owner"] == auth.curUser(req)?.userName
     }

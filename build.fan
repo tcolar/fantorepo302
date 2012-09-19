@@ -12,7 +12,7 @@ class Build : BuildPod
 {
   new make()
   {
-    podName = "fantorepo"
+    podName = "fantorepo302"
     summary = "Public / private Fantom pod repository."
     meta = ["vcs.uri":"https://bitbucket.org/tcolar/fantorepo",
 	    "license.name":"MIT"]
