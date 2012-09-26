@@ -54,7 +54,7 @@ class MongoUtils
     return results
   }
   
-  ** Most doenloade public pods
+  ** Most downloaded public pods
   ** Because we bypass fanlink we get a plain list as the result
   static List topPods(DB db, Int nbItems := 5)
   {
@@ -130,7 +130,7 @@ class MongoUtils
         }
         // Now filter out avvording to version & meta
         cpt := 0
-        versions.eachr |PodVersion version -> Str?| // we use eachr to get newest first
+        versions.eachrWhile |PodVersion version -> Str?| // we use eachr to get newest first
         {
           if(cpt >= numVersions) return "done"
           spec := version.asPodSpec

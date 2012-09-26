@@ -51,11 +51,11 @@ const class Templating
     out.print(Mustache(template.in).render(params))
   }
   
-  // lambda to display ok looking DateTimes in locale format
+  // lambda to display nicer looking DateTimes in locale format
   const static Func formatTimestamp := |Str var, |Str->Obj?| context, Func render -> Obj?| 
   {
     date := DateTime.fromJava(context(var))
-    return date.toLocale("MMM DDD YYYY - h:m zzz")
+    return date.toLocale("MMM DDD YYYY - hh:mm zzz")
   }
   
   // lambda to format a size (in B/KB/MB/GB format))

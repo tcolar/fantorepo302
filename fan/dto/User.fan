@@ -21,7 +21,7 @@ const class User: MongoDoc
   const Str email
   const Str? website
   ** would be set to true if a temp password was set and not replaced yet by the user
-  const Bool rest := false
+  const Bool reset := false
   
   new make(|This| f) {f(this)}
 

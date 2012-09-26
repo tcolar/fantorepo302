@@ -270,7 +270,7 @@ const class WebModWrapper : WebMod
   
   override Void onService()
   {
-    // Stash the user name since FantoRepo.publish does not have access to it
+    // Stash the user name since FantoRepo.publish does not have access to it otherwise
     username := req.headers["Fanr-Username"]
     Actor.locals["fanr-user"] = username
     

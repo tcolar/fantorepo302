@@ -103,6 +103,7 @@ internal const class FantoRepoAuth : WebRepoAuth
   ** Throw descriptive errors if validation fails
   Void validateSpec(PodSpec p, Bool isPrivate)
   {
+    // TODO: check name contains only valid characters ... especially since used as part of the file path.
     if( ! checkStr(p.name) || Utils.standardPods.contains(p.name))
       throw Err("Invalid pod name")
     if( ! checkStr(p.version.toStr))
