@@ -104,6 +104,7 @@ const class AuthService : Service
       password = hashPassword(userName, form["password"])
       email = form["email"]
       website = form["website"]
+      fullName = form["fullname"]
     }
     user.insert(db);
     return user

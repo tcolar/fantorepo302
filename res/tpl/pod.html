@@ -15,7 +15,7 @@
             <li><b>Source Control Repo: <a href='{{vcsUri}}'>{{vcsUri}}</a></b></li>
             <li>Last Update: {{#formatTimestamp}}lastModif{{/formatTimestamp}}</li>
             <li>Current version: <a href='/browse/{{name}}/{{pod.lastVersion}}'>{{lastVersion}}</a></li>
-            <li>Published by: {{owner}}</li>
+            <li>Published by: <a href="/user/{{owner}}">{{owner}}</a></li>
             <li># Of downloads: {{nbFetches}}</li>
         </ul>
         {{/pod}}

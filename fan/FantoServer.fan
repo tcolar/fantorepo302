@@ -48,6 +48,7 @@ const class FantoServer : DraftMod
         Route("/mypods", "GET", #myPods), 
         Route("/get/{pod}/{version}/{file}", "GET", #downloadPod),  
         Route("/remove/{pod}", "GET", #removePod),  
+        Route("/user/{user}", "GET", #user), 
       ]
     }
   }
@@ -258,6 +259,19 @@ const class FantoServer : DraftMod
     if(user != null)
       params["user"] = user
     tpl.renderPage(out, template, title, params)
+  }
+  
+  Void user(Str:Str args)
+  {
+    name := args["user"]
+    user := User.find(db, name)
+    if(user == null)
+    {
+      notFound; return;
+    }  
+    res.headers["Content-Type"] = "text/html"
+    res.statusCode = 200
+    renderPage(res.out, Templating.user, "User", ["user" : user])      
   }
 }
 

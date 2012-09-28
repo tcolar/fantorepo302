@@ -7,4 +7,4 @@
 5) browse/search sorting & pagination (jquery ? )
 5) pod depends count ... might need a background job for that to update the count every hours or something like that
 5) allow user to modify some of the pod meta after it's published ? maybe ... but not version or license for example.
-5) Make menu more interactve, "highlight" the active one
+5) Make menus more interactive, "highlight" the active one

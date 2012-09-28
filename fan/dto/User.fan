@@ -15,7 +15,8 @@ const class User: MongoDoc
   override const ObjectID? _id
   
   ** Username (lower case)
-  const Str userName  
+  const Str userName
+  const Str? fullName  
   ** Hashed password
   const Str password  
   const Str email
@@ -53,6 +54,7 @@ const class User: MongoDoc
       it.password = this.password
       it.email = this.email
       it.website = this.website
+      it.fullName = this.fullName
     }
     findFilter := FindFilter {
       filter = filterObj
