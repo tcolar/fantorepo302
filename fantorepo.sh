@@ -13,7 +13,7 @@
 NAME="fantorepo"
 USER="fantom" # User we will run fantom as
 FANTOM_HOME="/home/fantom/fan"
-FAN_ARGS="draft -port 9000 -prod fantorepo"
+FAN_ARGS="draft -port 9000 -prod fantorepo302"
 WORKDIR="/data/fantorepo"
 
 ###### Start script ########################################################
