@@ -1,6 +1,7 @@
 <div class='row-fluid'>
     {{#pod}}
     <h1>Pod info for : {{name}}</h1>
+    <h2><a href='/doc/{{name}}'>View documentation</a> </h2>
     <div class='alert alert-success'>
         To install the latest version (<a href='/browse/{{name}}/{{lastVersion}}'>{{lastVersion}}</a>) of this pod, use:<br /><br />
         <code><b>fanr install -r {{publicUri}}fanr/ {{name}}</b></code><br /><br />
@@ -21,7 +22,7 @@
         {{/pod}}
         <h4>All versions: </h4>
         <ul>
-        {{#versions}}    
+        {{#versions}}
             <li><a href='/browse/{{pod}}/{{name}}'>{{name}}</a></li>
         {{/versions}}
         </ul>
