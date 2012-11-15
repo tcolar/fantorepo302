@@ -11,11 +11,11 @@ using fanlink
 **
 ** FantoRepo implements a repository on the file system using
 ** a simple directory structure: (where 1.0.0 would be a pod version)
-** 
+**
 **  - /repo/public/pod1/1.0.0/pod1.pod for public pods
 **  - /repo/private/company1/pod1/1.0.1/pod1.pod for private pods
 **
-** The pods are indexed into MongoDb 
+** The pods are indexed into MongoDb
 **
 const class FantoRepo : Repo
 {
@@ -23,7 +23,7 @@ const class FantoRepo : Repo
   const File root             // Root directory of the repo
   const SettingsService settings := Service.find(SettingsService#)
   const DB db := (Service.find(DbService#) as DbService).db
-  
+
   ** Make for given URI which must reference a local dir
   new make()
   {
@@ -32,7 +32,7 @@ const class FantoRepo : Repo
   }
 
   // ############################## Repo impl #################################
-  override const Uri uri  
+  override const Uri uri
 
   override Str:Str ping()
   {
@@ -46,13 +46,13 @@ const class FantoRepo : Repo
 
     info := PodInfo.findOne(db, name)
     if(info != null)
-    { 
-      // if no version specified then return latest  
+    {
+      // if no version specified then return latest
       pod := PodVersion.find(db, name, ver ?: info.lastVersion)
       if(pod != null)
         return pod.asPodSpec
     }
-    
+
     if (checked) throw UnknownPodErr("$name-$ver")
       return null
   }
@@ -70,8 +70,8 @@ const class FantoRepo : Repo
     log.info("Read : $spec")
     version := PodVersion.find(db, spec.name, spec.version.toStr)
 
-    PodInfo.incFetches(db, version.pod) 
-    
+    PodInfo.incFetches(db, version.pod)
+
     file := File.os(version.filePath)
     // TODO: send the pod matching the spec
     return file.in
@@ -81,48 +81,49 @@ const class FantoRepo : Repo
   {
     // Note: by the time we get here it has been autenticated and validated by FantomRepoAuth
     owner := Actor.locals["fanr-user"]
-    
+
     log.info("Publishing : $podFile as $owner")
-    PodVersion? podVer 
-    
+    PodVersion? podVer
+
     try
-    { 
-      spec := PodSpec.load(podFile)    
-    
+    {
+      spec := PodSpec.load(podFile)
+
       isPrivate := spec.meta["repo.private"]?.toBool ?: false
-    
+
       // Store the file
       File dest := isPrivate ?
         root + `private/$owner/$spec.name/$spec.version/${spec.name}.pod`
         : root + `public/$spec.name/$spec.version/${spec.name}.pod`
-          
+
       dest.parent.create
       podFile.copyTo(dest)
-    
+      podFile.delete
+
       prevInfo := PodInfo.findOne(db, spec.name)
-      info := PodInfo.makeNew(spec, dest, owner) 
- 
+      info := PodInfo.makeNew(spec, dest, owner)
+
       // Create the version
       podVer = PodVersion.makeNew(spec, dest, owner)
       podVer.insert(db)
-    
+
       log.info("Published: $spec.name - $spec.version.toStr")
-      
+
       // Update the pod info
       if(prevInfo == null)
       { // new
-        info.insert(db)  
+        info.insert(db)
       }
       else
       { // update
         info.update(db)
-      }        
-    }catch(Err err) 
+      }
+    }catch(Err err)
     {
       log.err("Publishing error: ", err)
     }
-   
+
     return podVer?.asPodSpec ?: Err("Publish failed.")
   }
-  
+
 }

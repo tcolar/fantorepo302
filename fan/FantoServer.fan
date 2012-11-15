@@ -27,11 +27,13 @@ const class FantoServer : DraftMod
 
   const DocGenerator docGen := DocGenerator().start
 
+  const WebModWrapper repo := WebModWrapper()
+
   ** Constructor.
   new make()
   {
     // Will service "standard" fanr REST requests at /fanr/
-    subMods = ["fanr": WebModWrapper(),
+    subMods = ["fanr": repo,
                // serve generated static pod docs under /doc/
                "doc" : FileMod {file = File(settings.docRoot)}]
 
@@ -51,6 +53,7 @@ const class FantoServer : DraftMod
         Route("/browse/{pod}", "GET", #podInfo),
         Route("/browse/{pod}/{version}", "GET", #versionInfo),
         Route("/mypods", "GET", #myPods),
+        Route("/mypods", "POST", #ajaxUpload),
         Route("/get/{pod}/{version}/{file}", "GET", #downloadPod),
         Route("/remove/{pod}", "GET", #removePod),
         Route("/user/{user}", "GET", #user),
@@ -75,7 +78,7 @@ const class FantoServer : DraftMod
     renderPage(res.out, Templating.help, "Pod repo - help")
   }
 
-  ** Display index page.
+  ** Display login page.
   Void login()
   {
     res.headers["Content-Type"] = "text/html"
@@ -256,6 +259,55 @@ const class FantoServer : DraftMod
     data["query"] = query
 
     renderPage(res.out, Templating.results, "Search results", data)
+  }
+
+  ** Manual pod upload
+  Void ajaxUpload()
+  {
+    user := auth.curUser(req)
+    if(user != null)
+    {
+      Actor.locals["fanr-user"] = user.userName
+      now := DateTime.nowTicks.toStr
+      f := File(settings.repoRoot) + `tmp/${now}.pod`
+      try
+      {
+        mime := MimeType(req.headers["Content-Type"])
+        boundary := mime.params["boundary"] ?: throw IOErr("Missing boundary param: $mime")
+        // TODO: should enforce a size limit ?
+        WebUtil.parseMultiPart(req.in, boundary) |headers, in|
+        {
+          out := f.out
+          try
+            in.pipe(out)
+          finally
+            out.close
+        }
+        spec := PodSpec.load(f)
+        if(repo.repoMod.auth.allowPublish(user, spec))
+        {
+          repo.repoMod.repo.publish(f)
+        }
+        else
+        {
+          throw Err("Not allowed to publish.")
+        }
+      }
+      catch(Err e)
+      {
+        e.trace
+        res.statusCode = 500
+        res.headers["Content-Type"] = "text/html"
+        renderPage(res.out, "Error: $e", "Upload Error")
+        return
+      }
+      finally
+      {
+        if(f.exists) f.delete
+      }
+    }
+
+    myPods
   }
 
   Void renderPage(WebOutStream out, Str template, Str title, [Str:Obj]? params := [:])

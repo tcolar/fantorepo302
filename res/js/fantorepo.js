@@ -7,7 +7,7 @@ function flash(message, color) {
 
 $(".confirmit").on("click", function(){
     if( ! confirm(this.title)){
-        event.preventDefault(); 
+        event.preventDefault();
     }
 });
 
@@ -17,9 +17,9 @@ $(".searchlink").on("click", function(){
     setTimeout(function(){
         $(".search-query").css("background-color", color);
     }, 500);
-    event.preventDefault(); 
+    event.preventDefault();
 });
-    
+
 $("#register").submit(function(){
     $.ajax( {
         type: "POST",
@@ -31,7 +31,7 @@ $("#register").submit(function(){
         error: function( resp ) {
             flash(resp.responseText, "#FFCCFF")
         }
-    } ); 
+    } );
     return false;
 });
 
@@ -46,7 +46,7 @@ $("#login").submit(function(){
         error: function( resp ) {
             flash(resp.responseText, "#FFCCFF")
         }
-    } ); 
+    } );
     return false;
 });
 

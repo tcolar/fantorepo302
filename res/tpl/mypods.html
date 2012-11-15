@@ -22,4 +22,15 @@
         </tr>
         {{/pods}}
     </table>
+
+    {{#user}}
+    <hr/>
+    <h2>Manually upload a pod</h2>
+    <form id="upload" class="well" action="/mypods" method="POST" enctype="multipart/form-data">
+      <label>Pod File:</label>
+      <input name="pod" type="file"/>
+      <label></label>
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+    {{/user}}
 </div>
