@@ -121,19 +121,8 @@ const class PodInfo : MongoDoc
 
   Void update(DB db)
   {
-    filterObj := PodInfo {
-      it.name = this.name
-      it.nameLower = this.nameLower
-      it.lastModif = DateTime.now.toJava
-      it.lastVersion = this.lastVersion
-      it.isPrivate = this.isPrivate
-      it.vcsUri = this.vcsUri
-      it.summary = this.summary
-      it.nbFetches = this.nbFetches
-      it.nbDependants = this.nbDependants
-    }
     findFilter := FindFilter {
-      filter = filterObj
+      filter = this
       interestingFields = [PodInfo#nameLower]
     }
     Operations.update(db, findFilter, this)
