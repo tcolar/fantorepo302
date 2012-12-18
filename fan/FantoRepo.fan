@@ -101,7 +101,6 @@ const class FantoRepo : Repo
       podFile.delete
 
       prevInfo := PodInfo.findOne(db, spec.name)
-      info := PodInfo.makeNew(spec, dest, owner)
 
       // Create the version
       podVer = PodVersion.makeNew(spec, dest, owner)
@@ -112,10 +111,12 @@ const class FantoRepo : Repo
       // Update the pod info
       if(prevInfo == null)
       { // new
+        info := PodInfo.makeNew(spec, dest, owner)
         info.insert(db)
       }
       else
       { // update
+        info := PodInfo.makeNew(spec, dest, owner, prevInfo.nbFetches, prevInfo.nbDependants)
         info.update(db)
       }
     }catch(Err err)

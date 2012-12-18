@@ -37,7 +37,7 @@ const class PodInfo : MongoDoc
 
   new make(|This| f) {f(this)}
 
-  new makeNew(PodSpec spec, File newFile, Str owner)
+  new makeNew(PodSpec spec, File newFile, Str owner, Int nbFetches := 0, Int nbDependants := 0)
   {
       this.name = spec.name
       this.nameLower = spec.name.lower
@@ -51,6 +51,9 @@ const class PodInfo : MongoDoc
       this.isPrivate = spec.meta["repo.private"]?.toBool ?: false
       this.vcsUri = spec.meta["vcs.uri"]?.toStr
       this.summary = spec.summary
+
+      this.nbFetches = nbFetches
+      this.nbDependants = nbDependants
   }
 
   static PodInfo? findOne(DB db, Str podName)

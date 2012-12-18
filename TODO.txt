@@ -1,4 +1,3 @@
-Bug: When updating a pod, download count still get reset
 Bug: Docs don't get re-generated when pod updated
 
 
