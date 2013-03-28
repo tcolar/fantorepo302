@@ -4,7 +4,7 @@
 ### BEGIN INIT INFO
 # Provides:       fantorepo
 # Required-Start: $network
-# Required-Stop:  
+# Required-Stop:
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
 # Short-Description: fantorepo
@@ -31,8 +31,8 @@ recursiveKill() { # Recursively kill a process and all subprocesses
 case "$1" in
       start)
         echo "Starting $NAME ..."
-        if [ -f "$WORKDIR/$NAME.pid" ] 
-        then 
+        if [ -f "$WORKDIR/$NAME.pid" ]
+        then
             echo "Already running according to $WORKDIR/$NAME.pid"
             exit 1
         fi
@@ -61,8 +61,8 @@ case "$1" in
         $0 start
         ;;
       status)
-        if [ -f "$WORKDIR/$NAME.pid" ] 
-        then 
+        if [ -f "$WORKDIR/$NAME.pid" ]
+        then
             PID=`cat "$WORKDIR/$NAME.pid"`
             if [ "$(/bin/ps --no-headers -p $PID)" ]
             then
@@ -73,7 +73,7 @@ case "$1" in
         else
             echo "$NAME is NOT running" && exit 1
         fi
-	;;
+  ;;
       *)
       echo "Usage: /etc/init.d/$NAME {start|stop|restart|status}" && exit 1
       ;;

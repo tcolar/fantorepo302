@@ -87,6 +87,11 @@ const class Templating
         }
         val = tmp
       }
+      else if(key == "org.uri" && ! val.isEmpty)
+      {
+        // make org.uri a link
+        val = "<a href='$val'>$val</a>"
+      }
       result += "<li>${key}: ${val}</li>"
     }
     return result

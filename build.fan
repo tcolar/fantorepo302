@@ -21,6 +21,6 @@ class Build : BuildPod
                 "compilerDoc 1.0+", "webmod 1.0+", "netColarUtils 1.0+"]
     srcDirs = [`fan/`, `fan/dto/`, `fan/tool/`, `fan/doc/`]
     resDirs = [`res/css/`, `res/tpl/`, `res/js/`]
-    version = Version("1.0.10")
+    version = Version("1.0.11")
   }
 }
