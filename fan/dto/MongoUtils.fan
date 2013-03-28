@@ -56,7 +56,7 @@ class MongoUtils
 
   ** Most downloaded public pods
   ** Because we bypass fanlink we get a plain list as the result
-  static List topPods(DB db, Int nbItems := 5)
+  static List topPods(DB db, Int nbItems := 10)
   {
     collectionName := mongoDocName(PodInfo#)
     cursor := db.collection(collectionName).find(doc("isPrivate", false))
@@ -67,7 +67,7 @@ class MongoUtils
 
   ** Most recenty updated public pods
   ** Because we bypass fanlink we get a plain list as the result
-  static List recentPods(DB db, Int nbItems := 5)
+  static List recentPods(DB db, Int nbItems := 6)
   {
     collectionName := mongoDocName(PodInfo#)
     cursor := db.collection(collectionName).find(doc("isPrivate", false))

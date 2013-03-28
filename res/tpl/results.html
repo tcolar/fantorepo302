@@ -6,6 +6,7 @@
             <th>Name</th>
             <th>Latest Version</th>
             <th>Last Update</th>
+            <th>Downloads</th>
             <th>Summary</th>
             <th>Documentation</th>
         </tr>
@@ -14,6 +15,7 @@
             <td><a href='/browse/{{name}}'>{{name}}</a></td>
             <td><a href='/browse/{{name}}/{{lastVersion}}'>{{lastVersion}}</a></td>
             <td>{{#formatTimestamp}}lastModif{{/formatTimestamp}}</td>
+            <td>{{nbFetches}}</td>
             <td>{{summary}}</td>
             <td><a href='/doc/{{name}}'>/doc/{{name}}</a></td>
         </tr>
