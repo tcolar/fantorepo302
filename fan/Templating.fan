@@ -58,7 +58,7 @@ const class Templating
   const static Func formatTimestamp := |Str var, |Str->Obj?| context, Func render -> Obj?|
   {
     date := DateTime.fromJava(context(var))
-    return date.toLocale("MMM DDD YYYY - hh:mm zzz")
+    return date.toLocale("MMM DDD YYYY")
   }
 
   // lambda to format a size (in B/KB/MB/GB format))
