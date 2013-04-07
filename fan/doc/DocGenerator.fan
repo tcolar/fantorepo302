@@ -8,16 +8,16 @@ using mongo
 
 **
 ** DocGenerator
-** Fenerate pod documentation
+** Generate pod documentation
 **
 const class DocGenerator : Service
 {
 
    // TODO: send standard pods links to fantom.org
-   // -> would need to overide DocTypeRenderer.writeTypeRef
-   // TODO: links to surces for bitbucket / github ??
+   // -> would need to override DocTypeRenderer.writeTypeRef
+   // TODO: links to sources for bitbucket / github ??
    // TODO: better styling
-   // TODO: don't check password on pubish for now ?
+   // TODO: don't check password on publish for now ?
 
   const SettingsService settings := Service.find(SettingsService#)
   const DbService dbSvc := Service.find(DbService#)
@@ -43,7 +43,7 @@ const class DocGenerator : Service
     }
   }
 
-  ** Wether a pod doc is up to date or not
+  ** Whether a pod doc is up to date or not
   Bool upToDate(PodInfo pod)
   {
     vf := File(settings.docRoot) + `${pod.name}/version.txt`
@@ -98,11 +98,11 @@ const class GeneratorActor : Actor
 
     dp.types.each |dt|
     {
-      // Note: if type is "Index" and we are on windows it could be overwriten by the index.html
+      // Note: if type is "Index" and we are on windows it could be overwritten by the index.html
       f := File(settings.docRoot + `${version.pod}/${dt.name}.html`)
         FileUtils.mkDirs(f.parent.uri)
       wos := WebOutStream(f.out)
-      tpl.render(wos, Templating.docTop, ["title":"${version.pod}::{dt.name}"])
+      tpl.render(wos, Templating.docTop, ["title":"${version.pod}::${dt.name}"])
       dr := DtRenderer(env, wos, dt)
       dr.writeContent
       tpl.render(wos, Templating.docBottom)
