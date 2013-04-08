@@ -1,0 +1,82 @@
+.navbar {
+    font-size: 13px;
+}
+.navbar ul, 
+.navbar ol {
+    padding: 0;
+    margin: 0;
+}
+.navbar li {
+    line-height: 18px;
+}
+.navbar a {
+	text-decoration: none;
+}
+
+.navbar {
+	float:left;
+	width:100%;
+    background-color: #2C2C2C;
+    font-family: Georgia,'Times New Roman',times,serif;
+}
+
+.navbar-inner {
+    background-color: #2C2C2C;
+    background-repeat: repeat-x;
+    min-height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-image: -moz-linear-gradient(center top , #333333, #222222);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+    border-radius: 4px 4px 4px 4px;
+}
+
+.navbar .brand {
+    color: #AAAAFF;
+    font-weight: bold;
+    margin-right: 20px;
+    display: block;
+    float: left;
+    font-size: 20px;
+    line-height: 1;
+    margin-left: -20px;
+    padding: 8px 20px 12px;
+}
+
+.navbar .nav {
+    display: block;
+    float: left;
+    left: 0;
+    margin: 0 10px 0 0;
+    position: relative;
+}
+
+.nav {
+    list-style: none outside none;
+}
+
+.navbar .nav li {
+    display: block;
+    float: left;
+}
+
+.navbar .nav li a {
+    color: #999999;
+    float: none;
+    line-height: 19px;
+    padding: 9px 10px 11px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.nav li a {
+    display: block;
+}
+
+.nav li a:hover {
+	color: #ffffff;
+}
+
+.subHeader {
+	clear:	both;
+}
