@@ -7,12 +7,15 @@
 **
 ** Utils
 **
-internal class Utils
-{
+internal class Utils {
   
-  internal static const Str[] standardPods := ["build", "compiler","compilerDoc","compilerJava",
-    "compilerJs","concurrent","doc","dom","email","fandoc","fanr","fansh",
-    "flux","fwt","gfx","icons","inet","obix","sql","syntax","sys","util",
-    "web","webfwt","webmod","wisp","xml"] 
+	internal static const Str[] standardPods := [
+		"build", "compiler", "compilerDoc", "compilerJava", "compilerJs", "concurrent", "doc", 
+		"dom", "email", "fandoc", "fanr", "fansh", "flux", "fwt", "gfx", "icons", "inet", "obix",
+		"sql", "syntax", "sys", "util", "web", "webfwt", "webmod", "wisp", "xml",
+		
+		// don't forget the manuals!
+		"docFanr", "docIntro", "docLang", "docTools"
+	] 
   
 }
