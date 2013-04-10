@@ -1,10 +1,11 @@
+
 <div class='row-fluid'>
     <h1>My Pods: </h1>
     <table class='table table-striped'>
         <tr>
             <th>Name</th>
-            <th>Latest Version</th>
-            <th>Last Update</th>
+            <th>Version</th>
+            <th class="nowrap">Last Update</th>
             <th>Downloads</th>
             <th>Summary</th>
             <th></th>
@@ -13,7 +14,7 @@
         <tr>
             <td><a href='/browse/{{name}}'>{{name}}</a></td>
             <td><a href='/browse/{{name}}/{{lastVersion}}'>{{lastVersion}}</a></td>
-            <td>{{#formatTimestamp}}lastModif{{/formatTimestamp}}</td>
+            <td class="nowrap">{{#formatTimestamp}}lastModif{{/formatTimestamp}}</td>
             <td>{{nbFetches}}</td>
             <td>{{summary}}</td>
             <th>
